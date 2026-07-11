@@ -5,6 +5,27 @@
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* --- Payment wall ------------------------------------------------------
+     Watermark-free full-resolution files are NOT on this site; they are
+     delivered only after purchase. Map each image path to its payment link
+     (Razorpay / Gumroad / Payhip product URL). Any photo without a link
+     falls back to an email enquiry. */
+  var PAYMENT_LINKS = {
+    /* "assets/img/IMG20260604153249.jpg": "https://your-payment-link", */
+  };
+  var ENQUIRY_EMAIL = "nisargi3112@gmail.com";
+
+  /* --- Download deterrence ------------------------------------------------
+     Blocks right-click-save and drag-to-save on photographs. (Determined
+     visitors can still screenshot; the baked-in watermark is the real
+     protection - clean files exist only behind the purchase flow.) */
+  document.addEventListener("contextmenu", function (e) {
+    if (e.target.tagName === "IMG") e.preventDefault();
+  });
+  document.addEventListener("dragstart", function (e) {
+    if (e.target.tagName === "IMG") e.preventDefault();
+  });
+
   /* --- Footer year ------------------------------------------------------- */
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -72,6 +93,7 @@
   var lbClose = document.getElementById("lb-close");
   var lbPrev = document.getElementById("lb-prev");
   var lbNext = document.getElementById("lb-next");
+  var lbBuy = document.getElementById("lb-buy");
   var lastFocused = null;
   var activeList = [];
   var activeIndex = 0;
@@ -81,6 +103,7 @@
     var titleEl = shot.querySelector(".shot__title");
     return {
       full: img.getAttribute("data-full") || img.src,
+      path: img.getAttribute("src"),
       alt: img.getAttribute("alt") || "",
       title: titleEl ? titleEl.textContent : ""
     };
@@ -103,6 +126,16 @@
     }
     lbTitle.textContent = data.title;
     lbCount.textContent = (activeIndex + 1) + " / " + activeList.length;
+    var payLink = PAYMENT_LINKS[data.path];
+    if (payLink) {
+      lbBuy.href = payLink;
+      lbBuy.textContent = "Buy full-resolution";
+    } else {
+      lbBuy.href = "mailto:" + ENQUIRY_EMAIL +
+        "?subject=" + encodeURIComponent("Purchase: " + data.title + " (The Long Light)") +
+        "&body=" + encodeURIComponent("Hi Nisargi,\n\nI'd like to buy \"" + data.title + "\" - please send me the price for a print / full-resolution download.\n\nThanks!");
+      lbBuy.textContent = "Buy print / full-res";
+    }
     var single = activeList.length < 2;
     lbPrev.style.visibility = single ? "hidden" : "visible";
     lbNext.style.visibility = single ? "hidden" : "visible";
@@ -155,7 +188,7 @@
     else if (e.key === "ArrowLeft") step(-1);
     else if (e.key === "ArrowRight") step(1);
     else if (e.key === "Tab") {
-      var focusables = [lbClose, lbPrev, lbNext].filter(function (el) { return el.style.visibility !== "hidden"; });
+      var focusables = [lbClose, lbPrev, lbBuy, lbNext].filter(function (el) { return el.style.visibility !== "hidden"; });
       var first = focusables[0], last = focusables[focusables.length - 1];
       if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
       else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
