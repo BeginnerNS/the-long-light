@@ -10,11 +10,13 @@
      delivered only after purchase, via Razorpay Standard Checkout.
      PAYMENT_API_BASE is the origin hosting /api/create-order and
      /api/verify-payment (e.g. "https://the-long-light.vercel.app").
-     While it is empty, the buy button falls back to an email enquiry,
-     so the site keeps working before the API is deployed. Prices live
-     server-side in api/create-order.js; no key or amount is trusted
-     from the browser. */
-  var PAYMENT_API_BASE = "https://the-long-light-xi.vercel.app";
+     On any *.vercel.app host the API is same-origin ("" = relative
+     URLs, no CORS involved), which also covers deployment-preview
+     domains. Prices live server-side in api/create-order.js; no key
+     or amount is trusted from the browser. */
+  var PAYMENT_API_BASE = /\.vercel\.app$/.test(window.location.hostname)
+    ? ""
+    : "https://the-long-light-xi.vercel.app";
   var ENQUIRY_EMAIL = "nisargi3112@gmail.com";
 
   /* --- Download deterrence ------------------------------------------------
@@ -172,7 +174,7 @@
 
   /* --- Razorpay checkout -------------------------------------------------- */
   function canCheckout() {
-    return PAYMENT_API_BASE !== "" && typeof window.Razorpay === "function";
+    return typeof window.Razorpay === "function";
   }
 
   function setStatus(msg) {
