@@ -81,7 +81,26 @@ Then do step 3 above (Settings → Pages).
 If you buy a domain (e.g. `thelonglight.com`), add it under **Settings → Pages → Custom domain**
 and point your domain's DNS at GitHub. HTTPS is issued automatically and free.
 
-## 4. Preview locally before publishing
+## 4. Payments (Razorpay Standard Checkout)
+
+The "Buy full-resolution" button in the lightbox uses Razorpay. The pieces:
+
+```
+api/create-order.js    ← serverless: creates a Razorpay order (price set HERE, server-side)
+api/verify-payment.js  ← serverless: verifies the HMAC payment signature
+dev-server.js          ← local test server: npm run dev → http://localhost:5051
+.env                   ← your Razorpay keys (NEVER commit; .env.example shows the shape)
+```
+
+- Prices: edit `DEFAULT_PRICE_PAISE` / `PRICES_PAISE` in `api/create-order.js` (₹499 default, amounts in paise).
+- The key secret never reaches the browser; the frontend receives only the public key id from the API.
+- While `PAYMENT_API_BASE` (top of `assets/js/main.js`) is `""`, the button falls back to an email enquiry, so the static site keeps working without the API.
+
+**Test locally:** `npm install`, then `npm run dev`, open http://localhost:5051, set `PAYMENT_API_BASE = "http://localhost:5051"` temporarily, click a photo → "Buy full-resolution" → the Razorpay test modal opens (test card: 4111 1111 1111 1111, any future expiry, any CVV).
+
+**Go live:** deploy this repo to [Vercel](https://vercel.com) (free) → set `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` env vars in the Vercel project → set `PAYMENT_API_BASE` to your Vercel URL → push. Switch to live keys in the Razorpay dashboard when ready to take real money (requires KYC).
+
+## 5. Preview locally before publishing
 Because the browser loads files from `assets/`, open it through a tiny local server
 rather than double-clicking (some browsers block `file://` asset loading):
 ```bash

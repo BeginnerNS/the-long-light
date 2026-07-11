@@ -7,12 +7,14 @@
 
   /* --- Payment wall ------------------------------------------------------
      Watermark-free full-resolution files are NOT on this site; they are
-     delivered only after purchase. Map each image path to its payment link
-     (Razorpay / Gumroad / Payhip product URL). Any photo without a link
-     falls back to an email enquiry. */
-  var PAYMENT_LINKS = {
-    /* "assets/img/IMG20260604153249.jpg": "https://your-payment-link", */
-  };
+     delivered only after purchase, via Razorpay Standard Checkout.
+     PAYMENT_API_BASE is the origin hosting /api/create-order and
+     /api/verify-payment (e.g. "https://the-long-light.vercel.app").
+     While it is empty, the buy button falls back to an email enquiry,
+     so the site keeps working before the API is deployed. Prices live
+     server-side in api/create-order.js; no key or amount is trusted
+     from the browser. */
+  var PAYMENT_API_BASE = "";
   var ENQUIRY_EMAIL = "nisargi3112@gmail.com";
 
   /* --- Download deterrence ------------------------------------------------
@@ -94,6 +96,7 @@
   var lbPrev = document.getElementById("lb-prev");
   var lbNext = document.getElementById("lb-next");
   var lbBuy = document.getElementById("lb-buy");
+  var lbStatus = document.getElementById("lb-status");
   var lastFocused = null;
   var activeList = [];
   var activeIndex = 0;
@@ -126,16 +129,13 @@
     }
     lbTitle.textContent = data.title;
     lbCount.textContent = (activeIndex + 1) + " / " + activeList.length;
-    var payLink = PAYMENT_LINKS[data.path];
-    if (payLink) {
-      lbBuy.href = payLink;
-      lbBuy.textContent = "Buy full-resolution";
-    } else {
-      lbBuy.href = "mailto:" + ENQUIRY_EMAIL +
-        "?subject=" + encodeURIComponent("Purchase: " + data.title + " (The Long Light)") +
-        "&body=" + encodeURIComponent("Hi Nisargi,\n\nI'd like to buy \"" + data.title + "\" - please send me the price for a print / full-resolution download.\n\nThanks!");
-      lbBuy.textContent = "Buy print / full-res";
-    }
+    lbStatus.textContent = "";
+    /* mailto is the standing fallback href; the click handler upgrades
+       it to Razorpay checkout when the payment API is available */
+    lbBuy.href = "mailto:" + ENQUIRY_EMAIL +
+      "?subject=" + encodeURIComponent("Purchase: " + data.title + " (The Long Light)") +
+      "&body=" + encodeURIComponent("Hi Nisargi,\n\nI'd like to buy \"" + data.title + "\" - please send me the price for a print / full-resolution download.\n\nThanks!");
+    lbBuy.textContent = canCheckout() ? "Buy full-resolution" : "Buy print / full-res";
     var single = activeList.length < 2;
     lbPrev.style.visibility = single ? "hidden" : "visible";
     lbNext.style.visibility = single ? "hidden" : "visible";
@@ -169,6 +169,90 @@
     activeIndex = (activeIndex + dir + activeList.length) % activeList.length;
     render();
   }
+
+  /* --- Razorpay checkout -------------------------------------------------- */
+  function canCheckout() {
+    return PAYMENT_API_BASE !== "" && typeof window.Razorpay === "function";
+  }
+
+  function setStatus(msg) {
+    lbStatus.textContent = msg;
+  }
+
+  function startCheckout(data) {
+    lbBuy.setAttribute("aria-disabled", "true");
+    setStatus("Preparing secure checkout…");
+    fetch(PAYMENT_API_BASE + "/api/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ photo: data.path, title: data.title })
+    })
+      .then(function (r) {
+        if (!r.ok) throw new Error("create-order failed: " + r.status);
+        return r.json();
+      })
+      .then(function (order) {
+        setStatus("");
+        var rzp = new window.Razorpay({
+          key: order.key_id,
+          order_id: order.order_id,
+          amount: order.amount,
+          currency: order.currency,
+          name: "The Long Light",
+          description: data.title,
+          notes: { photo: data.path },
+          theme: { color: "#df9542" },
+          modal: {
+            ondismiss: function () {
+              lbBuy.removeAttribute("aria-disabled");
+              setStatus("Checkout closed — you have not been charged.");
+            }
+          },
+          handler: function (resp) {
+            setStatus("Verifying payment…");
+            fetch(PAYMENT_API_BASE + "/api/verify-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: resp.razorpay_order_id,
+                razorpay_payment_id: resp.razorpay_payment_id,
+                razorpay_signature: resp.razorpay_signature
+              })
+            })
+              .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+              .then(function (v) {
+                lbBuy.removeAttribute("aria-disabled");
+                if (v.ok && v.body.verified) {
+                  setStatus("Payment verified — thank you! Your full-resolution file will be emailed to you shortly.");
+                } else {
+                  setStatus("Payment received but could not be verified. Please email " + ENQUIRY_EMAIL + " with your payment id: " + resp.razorpay_payment_id);
+                }
+              })
+              .catch(function () {
+                lbBuy.removeAttribute("aria-disabled");
+                setStatus("Could not verify the payment. Please email " + ENQUIRY_EMAIL + " with your payment id: " + resp.razorpay_payment_id);
+              });
+          }
+        });
+        rzp.on("payment.failed", function (resp) {
+          lbBuy.removeAttribute("aria-disabled");
+          var reason = resp && resp.error && resp.error.description ? " (" + resp.error.description + ")" : "";
+          setStatus("Payment failed" + reason + ". You have not been charged — please try again.");
+        });
+        rzp.open();
+      })
+      .catch(function () {
+        lbBuy.removeAttribute("aria-disabled");
+        setStatus("Could not start checkout. Please email " + ENQUIRY_EMAIL + " instead.");
+      });
+  }
+
+  lbBuy.addEventListener("click", function (e) {
+    if (!canCheckout()) return; /* let the mailto fallback proceed */
+    e.preventDefault();
+    if (lbBuy.getAttribute("aria-disabled") === "true") return;
+    startCheckout(shotData(activeList[activeIndex]));
+  });
 
   shots.forEach(function (shot) {
     var btn = shot.querySelector(".shot__btn");

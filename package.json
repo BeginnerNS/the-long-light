@@ -1,0 +1,19 @@
+{
+  "name": "the-long-light",
+  "version": "1.0.0",
+  "description": "The Long Light - photography portfolio with Razorpay checkout",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "dev": "node dev-server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BeginnerNS/the-long-light.git"
+  },
+  "author": "Nisargi Shah",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "razorpay": "^2.9.6"
+  }
+}

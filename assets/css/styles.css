@@ -317,6 +317,12 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   transition: background 0.25s var(--ease-out), transform 0.25s var(--ease-out);
 }
 .lightbox__buy:hover { background: var(--accent-strong); transform: translateY(-1px); }
+.lightbox__buy[aria-disabled="true"] { opacity: 0.55; pointer-events: none; }
+.lightbox__status {
+  flex-basis: 100%; text-align: center; font-family: var(--font-display);
+  font-size: 0.9rem; color: var(--accent); min-height: 1.2em;
+}
+.lightbox__status:empty { display: none; }
 
 .lightbox__close, .lightbox__nav {
   display: grid; place-items: center; cursor: pointer; color: var(--ink);

@@ -4,3 +4,9 @@ _originals/
 # local tooling
 .claude/
 .impeccable/
+
+# secrets - never commit
+.env
+
+# dependencies
+node_modules/
