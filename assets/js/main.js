@@ -14,7 +14,7 @@
      so the site keeps working before the API is deployed. Prices live
      server-side in api/create-order.js; no key or amount is trusted
      from the browser. */
-  var PAYMENT_API_BASE = "";
+  var PAYMENT_API_BASE = "https://the-long-light-xi.vercel.app";
   var ENQUIRY_EMAIL = "nisargi3112@gmail.com";
 
   /* --- Download deterrence ------------------------------------------------
