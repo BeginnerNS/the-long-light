@@ -1,6 +1,10 @@
 # full-resolution photo backups — not needed on the website
 _originals/
 
+# drop new full-res photos here for `npm run add-photos` (never committed:
+# the repo is public and clean originals must stay private)
+new-photos/
+
 # local tooling
 .claude/
 .impeccable/

@@ -5,7 +5,9 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "dev": "node dev-server.js"
+    "dev": "node dev-server.js",
+    "add-photos": "node tools/add-photos.mjs",
+    "verify": "node tools/verify-site.mjs"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,8 @@
   "license": "UNLICENSED",
   "dependencies": {
     "razorpay": "^2.9.6"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.3"
   }
 }

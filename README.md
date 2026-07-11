@@ -30,7 +30,26 @@ Still optional, all in `index.html`:
 
 The contact button is a `mailto:` link, so clicking it opens the visitor's email app. No server needed.
 
-## 2. Adding, replacing, or reordering photos
+## 2. Adding photos — the one-command pipeline
+
+```
+1. Drop full-res photos into new-photos\, named:  <category>--<title-with-dashes>.jpg
+      landscape--first-light-on-the-ridge.jpg
+      street--rain-on-mg-road.jpg
+2. Run:  npm run add-photos -- --push
+```
+
+That single command watermarks + resizes each photo, adds it to the gallery,
+archives your clean original into `_originals\` (never uploaded — the repo is
+public), commits, and pushes. GitHub Pages and the Vercel payment API both
+redeploy automatically on push, and a GitHub Actions **CI run** then verifies
+the site (no broken/oversized images, no leaked secrets) and probes the
+payment API. Run without `--push` to review locally first (`npm run dev`).
+
+To retitle or reorder photos afterwards, edit their `<figure>` blocks in
+`index.html` (details below).
+
+## 2b. Editing, replacing, or reordering photos by hand
 
 Each photo in the gallery is one `<figure class="shot ...">` block in `index.html`:
 
