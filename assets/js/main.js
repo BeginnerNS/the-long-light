@@ -137,7 +137,9 @@
     lbBuy.href = "mailto:" + ENQUIRY_EMAIL +
       "?subject=" + encodeURIComponent("Purchase: " + data.title + " (The Long Light)") +
       "&body=" + encodeURIComponent("Hi Nisargi,\n\nI'd like to buy \"" + data.title + "\" - please send me the price for a print / full-resolution download.\n\nThanks!");
-    lbBuy.textContent = canCheckout() ? "Buy full-resolution" : "Buy print / full-res";
+    /* display price only; the server (api/create-order.js) remains the
+       source of truth for what is actually charged */
+    lbBuy.textContent = canCheckout() ? "Buy full-resolution · ₹499" : "Buy print / full-res";
     var single = activeList.length < 2;
     lbPrev.style.visibility = single ? "hidden" : "visible";
     lbNext.style.visibility = single ? "hidden" : "visible";

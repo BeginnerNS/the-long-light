@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://beginnerns.github.io/the-long-light/sitemap.xml

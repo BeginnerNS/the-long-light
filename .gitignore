@@ -5,6 +5,9 @@ _originals/
 # the repo is public and clean originals must stay private)
 new-photos/
 
+# marketing strategy + social exports - not site content, keep out of the public repo
+marketing/
+
 # local tooling
 .claude/
 .impeccable/
