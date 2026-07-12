@@ -7,7 +7,7 @@ const Razorpay = require("razorpay");
    the image path the site sends; anything not listed uses the default. */
 const DEFAULT_PRICE_PAISE = 49900; /* Rs 499 */
 const PRICES_PAISE = {
-  /* "assets/img/IMG20260604153249.jpg": 79900, */
+  /* "assets/img/tigers-nest-monastery-print.jpg": 79900, */
 };
 
 const ALLOWED_ORIGINS = [
