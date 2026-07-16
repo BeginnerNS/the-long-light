@@ -8,6 +8,9 @@ new-photos/
 # marketing strategy + social exports - not site content, keep out of the public repo
 marketing/
 
+# local experiments - not site content
+spline-demo.html
+
 # local tooling
 .claude/
 .impeccable/
