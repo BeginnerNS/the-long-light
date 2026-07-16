@@ -29,7 +29,7 @@ const ARCHIVE = path.join(ROOT, "_originals");
 const INDEX = path.join(ROOT, "index.html");
 const MARKER = "<!-- gallery:insert";
 const MAX_EDGE = 1800;
-const WATERMARK = "© Nisargi Shah";
+const WATERMARK = "The Long Light";
 const CATEGORIES = new Set(["landscape", "street"]);
 
 function titleCase(slugWords) {
@@ -42,24 +42,25 @@ function escapeHtml(s) {
 }
 
 function watermarkSvg(w, h) {
-  const big = Math.round(w / 13);
-  const small = Math.round(w / 42);
+  /* keep in sync with tools/rewatermark.mjs: smaller marks, low opacity */
+  const big = Math.round(w / 18);
+  const small = Math.round(w / 55);
   return Buffer.from(
     `<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg">` +
       `<g transform="translate(${w / 2},${h / 2}) rotate(-30)">` +
       `<text x="2" y="3" text-anchor="middle" dominant-baseline="middle" ` +
       `font-family="Georgia, serif" font-style="italic" font-size="${big}" ` +
-      `fill="black" fill-opacity="0.11">${WATERMARK}</text>` +
+      `fill="black" fill-opacity="0.05">${WATERMARK}</text>` +
       `<text x="0" y="0" text-anchor="middle" dominant-baseline="middle" ` +
       `font-family="Georgia, serif" font-style="italic" font-size="${big}" ` +
-      `fill="white" fill-opacity="0.19">${WATERMARK}</text>` +
+      `fill="white" fill-opacity="0.09">${WATERMARK}</text>` +
       `</g>` +
-      `<text x="${w - 16}" y="${h - 14}" text-anchor="end" ` +
+      `<text x="${w - 14}" y="${h - 12}" text-anchor="end" ` +
       `font-family="Georgia, serif" font-size="${small}" ` +
-      `fill="black" fill-opacity="0.35" dx="1" dy="1">${WATERMARK}</text>` +
-      `<text x="${w - 16}" y="${h - 14}" text-anchor="end" ` +
+      `fill="black" fill-opacity="0.18" dx="1" dy="1">${WATERMARK}</text>` +
+      `<text x="${w - 14}" y="${h - 12}" text-anchor="end" ` +
       `font-family="Georgia, serif" font-size="${small}" ` +
-      `fill="white" fill-opacity="0.59">${WATERMARK}</text>` +
+      `fill="white" fill-opacity="0.34">${WATERMARK}</text>` +
       `</svg>`
   );
 }
