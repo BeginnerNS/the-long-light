@@ -5,7 +5,7 @@ const Razorpay = require("razorpay");
 
 /* Price per photo in paise (Rs x 100). Add per-photo overrides keyed by
    the image path the site sends; anything not listed uses the default. */
-const DEFAULT_PRICE_PAISE = 49900; /* Rs 499 */
+const DEFAULT_PRICE_PAISE = 4900; /* Rs 49 */
 const PRICES_PAISE = {
   /* "assets/img/tigers-nest-monastery-print.jpg": 79900, */
 };

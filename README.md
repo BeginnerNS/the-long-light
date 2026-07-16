@@ -58,7 +58,7 @@ Each photo in the gallery is one `<figure class="shot ...">` block in `index.htm
   <button class="shot__btn" type="button" aria-label="Open image: Your title">
     <img src="assets/img/your-photo.jpg" data-full="assets/img/your-photo.jpg"
          alt="Describe the photo, this matters for accessibility and SEO"
-         loading="lazy" width="1350" height="1800">
+         loading="lazy" width="1349" height="1800">
   </button>
   <figcaption class="shot__cap"><span class="shot__title">Your title</span><span class="shot__cat">Landscape</span></figcaption>
 </figure>
@@ -107,15 +107,15 @@ The "Buy full-resolution" button in the lightbox uses Razorpay. The pieces:
 ```
 api/create-order.js    ← serverless: creates a Razorpay order (price set HERE, server-side)
 api/verify-payment.js  ← serverless: verifies the HMAC payment signature
-dev-server.js          ← local test server: npm run dev → http://localhost:5051
+dev-server.js          ← local test server: npm run dev → http://localhost:4951
 .env                   ← your Razorpay keys (NEVER commit; .env.example shows the shape)
 ```
 
-- Prices: edit `DEFAULT_PRICE_PAISE` / `PRICES_PAISE` in `api/create-order.js` (₹499 default, amounts in paise).
+- Prices: edit `DEFAULT_PRICE_PAISE` / `PRICES_PAISE` in `api/create-order.js` (₹49 default, amounts in paise).
 - The key secret never reaches the browser; the frontend receives only the public key id from the API.
 - While `PAYMENT_API_BASE` (top of `assets/js/main.js`) is `""`, the button falls back to an email enquiry, so the static site keeps working without the API.
 
-**Test locally:** `npm install`, then `npm run dev`, open http://localhost:5051, set `PAYMENT_API_BASE = "http://localhost:5051"` temporarily, click a photo → "Buy full-resolution" → the Razorpay test modal opens (test card: 4111 1111 1111 1111, any future expiry, any CVV).
+**Test locally:** `npm install`, then `npm run dev`, open http://localhost:4951, set `PAYMENT_API_BASE = "http://localhost:4951"` temporarily, click a photo → "Buy full-resolution" → the Razorpay test modal opens (test card: 4111 1111 1111 1111, any future expiry, any CVV).
 
 **Go live:** deploy this repo to [Vercel](https://vercel.com) (free) → set `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` env vars in the Vercel project → set `PAYMENT_API_BASE` to your Vercel URL → push. Switch to live keys in the Razorpay dashboard when ready to take real money (requires KYC).
 
