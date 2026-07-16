@@ -227,7 +227,18 @@
               .then(function (v) {
                 lbBuy.removeAttribute("aria-disabled");
                 if (v.ok && v.body.verified) {
-                  setStatus("Payment verified — thank you! Your full-resolution file will be emailed to you shortly.");
+                  var dl = PAYMENT_API_BASE + "/api/download?order_id=" + encodeURIComponent(resp.razorpay_order_id) +
+                    "&payment_id=" + encodeURIComponent(resp.razorpay_payment_id) +
+                    "&signature=" + encodeURIComponent(resp.razorpay_signature) +
+                    "&photo=" + encodeURIComponent(data.path);
+                  var a = document.createElement("a");
+                  a.href = dl; a.download = "";
+                  document.body.appendChild(a); a.click(); a.remove();
+                  lbStatus.innerHTML = "";
+                  lbStatus.appendChild(document.createTextNode("Payment verified — your download is starting. "));
+                  var link = document.createElement("a");
+                  link.href = dl; link.textContent = "Download again"; link.style.color = "var(--accent)";
+                  lbStatus.appendChild(link);
                 } else {
                   setStatus("Payment received but could not be verified. Please email " + ENQUIRY_EMAIL + " with your payment id: " + resp.razorpay_payment_id);
                 }

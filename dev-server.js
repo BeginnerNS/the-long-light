@@ -16,6 +16,7 @@ if (fs.existsSync(envPath)) {
 
 const createOrder = require("./api/create-order.js");
 const verifyPayment = require("./api/verify-payment.js");
+const download = require("./api/download.js");
 
 const MIME = {
   ".html": "text/html", ".css": "text/css", ".js": "text/javascript",
@@ -26,6 +27,7 @@ const MIME = {
 /* minimal Vercel-style req.body + res.status().json() helpers */
 function wrap(handler, req, res) {
   let raw = "";
+  req.query = Object.fromEntries(new URL(req.url, "http://localhost").searchParams);
   req.on("data", (c) => { raw += c; });
   req.on("end", () => {
     try { req.body = raw ? JSON.parse(raw) : {}; } catch (e) { req.body = {}; }
@@ -35,6 +37,7 @@ function wrap(handler, req, res) {
       res.end(JSON.stringify(obj));
       return res;
     };
+    res.send = (data) => { res.end(data); return res; };
     Promise.resolve(handler(req, res)).catch((err) => {
       res.statusCode = 500;
       res.end(JSON.stringify({ error: String(err && err.message || err) }));
@@ -46,6 +49,7 @@ http.createServer((req, res) => {
   const url = req.url.split("?")[0];
   if (url === "/api/create-order") return wrap(createOrder, req, res);
   if (url === "/api/verify-payment") return wrap(verifyPayment, req, res);
+  if (url === "/api/download") return wrap(download, req, res);
 
   const file = path.join(__dirname, url === "/" ? "index.html" : decodeURIComponent(url));
   if (!file.startsWith(__dirname) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) {
