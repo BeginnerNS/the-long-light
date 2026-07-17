@@ -100,9 +100,10 @@
         <button class="filter" type="button" data-filter="street" aria-pressed="false">Street</button>
       </div>
 
+      <div class="light-table">
       <div class="gallery" id="gallery">
 
-        <figure class="shot shot--keeper reveal" data-cat="landscape">
+        <figure class="shot reveal" data-cat="landscape">
           <button class="shot__btn" type="button" aria-label="Open image: The dzong above the river">
             <img src="assets/img/himalayan-dzong-river-print.jpg" data-full="assets/img/himalayan-dzong-river-print.jpg" alt="A white fortress monastery on a green hillside above a clear flowing river under a moody sky" loading="lazy" width="1350" height="1800">
           </button>
@@ -166,6 +167,7 @@
         </figure>
 
         <!-- gallery:insert (new photos are added here by tools/add-photos.mjs; do not remove) -->
+      </div>
       </div>
       <p class="gallery__empty" id="gallery-empty" hidden>No images in this set yet.</p>
     </section>
@@ -231,6 +233,7 @@
     </button>
   </div>
 
+  <div class="dim-overlay" id="dim-overlay" aria-hidden="true"></div>
   <div class="grain" aria-hidden="true"></div>
 
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>

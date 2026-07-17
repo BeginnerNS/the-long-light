@@ -81,6 +81,7 @@
       btn.classList.toggle("is-active", active);
       btn.setAttribute("aria-pressed", active ? "true" : "false");
     });
+    rebuildClones(); /* keep the endless-loop copies in sync with the filter */
   }
 
   filters.forEach(function (btn) {
@@ -274,12 +275,84 @@
     btn.addEventListener("click", function () { openAt(shot); });
   });
 
-  /* --- Light-table loupe ---------------------------------------------------
-     A warm circle of light that follows the cursor across the reel, like a
-     loupe on a light table. Desktop pointers only; skipped entirely when the
-     visitor prefers reduced motion. Pure transform updates - no layout. */
+  /* --- The endless reel ----------------------------------------------------
+     The strip drifts forward on its own, forever: the visible frames are
+     followed by aria-hidden clones, and when the scroll position passes one
+     full set the reel snaps back invisibly. Clicking a clone opens the
+     lightbox of its original, so the loop never breaks the buy flow.
+     Hovering pauses the reel (focus mode); reduced motion disables drift. */
   var gallery = document.getElementById("gallery");
-  if (gallery && !reduceMotion && window.matchMedia("(pointer: fine)").matches) {
+  var finePointer = window.matchMedia("(pointer: fine)").matches;
+  var loopStart = 0, loopWidth = 0;
+
+  function rebuildClones() {
+    if (!gallery) return;
+    Array.prototype.slice.call(gallery.querySelectorAll(".shot--clone")).forEach(function (n) { n.remove(); });
+    var visible = shots.filter(function (s) { return !s.classList.contains("is-hidden"); });
+    visible.forEach(function (orig) {
+      var c = orig.cloneNode(true);
+      c.classList.add("shot--clone", "is-in");
+      c.style.transitionDelay = "";
+      c.setAttribute("aria-hidden", "true");
+      var b = c.querySelector(".shot__btn");
+      if (b) {
+        b.tabIndex = -1;
+        b.addEventListener("click", function () { openAt(orig); });
+      }
+      gallery.appendChild(c);
+    });
+    var firstClone = gallery.querySelector(".shot--clone");
+    loopStart = visible.length ? visible[0].offsetLeft : 0;
+    loopWidth = firstClone ? firstClone.offsetLeft - loopStart : 0;
+  }
+
+  if (gallery) {
+    rebuildClones();
+
+    var reelPaused = false, reelPos = null, lastTick = null;
+    function reelTick(t) {
+      if (lastTick === null) lastTick = t;
+      var dt = Math.min((t - lastTick) / 1000, 0.1);
+      lastTick = t;
+      if (reelPaused || document.hidden || !lb.hidden) {
+        reelPos = gallery.scrollLeft;
+      } else {
+        if (reelPos === null) reelPos = gallery.scrollLeft;
+        reelPos += 26 * dt; /* px per second */
+        if (loopWidth > 0 && reelPos >= loopStart + loopWidth) reelPos -= loopWidth;
+        gallery.scrollLeft = reelPos;
+      }
+      requestAnimationFrame(reelTick);
+    }
+    if (!reduceMotion) requestAnimationFrame(reelTick);
+
+    gallery.addEventListener("pointerenter", function () { reelPaused = true; });
+    gallery.addEventListener("pointerleave", function () { reelPaused = false; reelPos = gallery.scrollLeft; });
+    var touchTimer = null;
+    gallery.addEventListener("touchstart", function () {
+      reelPaused = true;
+      if (touchTimer) clearTimeout(touchTimer);
+    }, { passive: true });
+    gallery.addEventListener("touchend", function () {
+      if (touchTimer) clearTimeout(touchTimer);
+      touchTimer = setTimeout(function () { reelPaused = false; reelPos = gallery.scrollLeft; }, 2500);
+    }, { passive: true });
+
+    /* Vertical wheel advances the reel while hovering it */
+    gallery.addEventListener("wheel", function (e) {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      if (gallery.scrollWidth <= gallery.clientWidth) return;
+      e.preventDefault();
+      gallery.scrollLeft += e.deltaY;
+    }, { passive: false });
+  }
+
+  /* --- Focus mode + camera-lens cursor ------------------------------------
+     Hovering the reel dims the rest of the page (fixed overlay under the
+     lit table) and turns the cursor into a lens; clicking fires a shutter
+     blink. Desktop pointers without reduced-motion only. */
+  var dimOverlay = document.getElementById("dim-overlay");
+  if (gallery && finePointer && !reduceMotion) {
     var loupe = document.createElement("div");
     loupe.className = "loupe";
     loupe.setAttribute("aria-hidden", "true");
@@ -291,25 +364,25 @@
         loupeRaf = null;
         var r = gallery.getBoundingClientRect();
         loupe.style.transform =
-          "translate3d(" + (e.clientX - r.left + gallery.scrollLeft - 95) + "px," +
-          (e.clientY - r.top - 95) + "px,0)";
+          "translate3d(" + (e.clientX - r.left + gallery.scrollLeft - 34) + "px," +
+          (e.clientY - r.top - 34) + "px,0)";
         loupe.classList.add("is-on");
       });
     });
+    gallery.addEventListener("pointerenter", function () {
+      document.body.classList.add("reel-focus");
+      gallery.classList.add("is-focus");
+    });
     gallery.addEventListener("pointerleave", function () {
+      document.body.classList.remove("reel-focus");
+      gallery.classList.remove("is-focus");
       loupe.classList.remove("is-on");
     });
-  }
-
-  /* Vertical wheel advances the horizontal reel while the cursor is over it
-     (shift+wheel and trackpads already scroll sideways natively). */
-  if (gallery) {
-    gallery.addEventListener("wheel", function (e) {
-      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return; /* already horizontal */
-      if (gallery.scrollWidth <= gallery.clientWidth) return; /* nothing to scroll */
-      e.preventDefault();
-      gallery.scrollLeft += e.deltaY;
-    }, { passive: false });
+    gallery.addEventListener("pointerdown", function () {
+      loupe.classList.remove("is-snap");
+      void loupe.offsetWidth; /* restart the animation */
+      loupe.classList.add("is-snap");
+    });
   }
 
   lbClose.addEventListener("click", closeLightbox);
