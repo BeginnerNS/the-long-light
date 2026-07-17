@@ -25,7 +25,11 @@ for (const f of fs.readdirSync(imgDir)) {
 }
 
 /* 3. secrets must never be tracked by git */
-const tracked = execSync("git ls-files", { cwd: ROOT, encoding: "utf8" }).split(/\r?\n/);
+let gitBin = "git";
+if (fs.existsSync("C:\\Program Files\\Git\\cmd\\git.exe")) {
+  gitBin = '"C:\\Program Files\\Git\\cmd\\git.exe"';
+}
+const tracked = execSync(`${gitBin} ls-files`, { cwd: ROOT, encoding: "utf8" }).split(/\r?\n/);
 if (tracked.includes(".env")) errors.push(".env is tracked by git - remove it immediately (git rm --cached .env) and rotate the keys.");
 const trackedContent = tracked.filter((f) => /\.(js|mjs|html|css|json|md)$/.test(f));
 for (const f of trackedContent) {

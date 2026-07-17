@@ -77,9 +77,18 @@ const PIN = path.join(ROOT, "marketing", "exports", "pinterest");
 const doExports = fs.existsSync(IG) && fs.existsSync(PIN);
 
 let n = 0;
-for (const [id, slug] of Object.entries(SLUG)) {
-  const src = path.join(ORIG, id + ".jpg");
-  if (!fs.existsSync(src)) { console.warn("MISSING original:", id); continue; }
+const files = fs.readdirSync(ORIG).filter((f) => /\.(jpe?g)$/i.test(f));
+for (const file of files) {
+  const name = path.basename(file, path.extname(file));
+  let slug = null;
+  if (SLUG[name]) {
+    slug = SLUG[name];
+  } else if (name.includes("--")) {
+    slug = name.split("--")[1];
+  } else {
+    slug = name;
+  }
+  const src = path.join(ORIG, file);
   const out = path.join(IMG, slug + ".jpg");
   const { w, h } = await watermarkTo(src, out);
   const kb = Math.round(fs.statSync(out).size / 1024);
@@ -87,7 +96,7 @@ for (const [id, slug] of Object.entries(SLUG)) {
   n++;
 
   if (doExports) {
-    const ex = EXPORT[id];
+    const ex = EXPORT[name] || slug;
     await S(out).resize(1080, 1350, { fit: "cover", position: "attention" }).jpeg({ quality: 88 }).toFile(path.join(IG, ex + "-4x5.jpg"));
     await S(out).resize(1000, 1500, { fit: "cover", position: "attention" }).jpeg({ quality: 88 }).toFile(path.join(PIN, ex + "-2x3.jpg"));
   }

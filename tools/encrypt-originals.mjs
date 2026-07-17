@@ -51,9 +51,18 @@ const SLUG = {
 
 fs.mkdirSync(OUT, { recursive: true });
 let n = 0;
-for (const [id, slug] of Object.entries(SLUG)) {
-  const src = path.join(ORIG, id + ".jpg");
-  if (!fs.existsSync(src)) { console.warn("MISSING original:", id); continue; }
+const files = fs.readdirSync(ORIG).filter((f) => /\.(jpe?g)$/i.test(f));
+for (const file of files) {
+  const name = path.basename(file, path.extname(file));
+  let slug = null;
+  if (SLUG[name]) {
+    slug = SLUG[name];
+  } else if (name.includes("--")) {
+    slug = name.split("--")[1];
+  } else {
+    slug = name;
+  }
+  const src = path.join(ORIG, file);
   const data = fs.readFileSync(src);
   const iv = crypto.randomBytes(12);
   const cipher = crypto.createCipheriv("aes-256-gcm", key, iv);
