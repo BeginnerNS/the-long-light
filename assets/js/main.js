@@ -338,13 +338,21 @@
       touchTimer = setTimeout(function () { reelPaused = false; reelPos = gallery.scrollLeft; }, 2500);
     }, { passive: true });
 
-    /* Vertical wheel advances the reel while hovering it */
-    gallery.addEventListener("wheel", function (e) {
-      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
-      if (gallery.scrollWidth <= gallery.clientWidth) return;
-      e.preventDefault();
-      gallery.scrollLeft += e.deltaY;
-    }, { passive: false });
+    /* Reel-nav: prev / next buttons scroll the strip by one frame */
+    var reelPrev = document.getElementById("reel-prev");
+    var reelNext = document.getElementById("reel-next");
+    function reelStep(dir) {
+      /* find the width of one shot (first visible) to step by */
+      var first = gallery.querySelector(".shot:not(.is-hidden):not(.shot--clone)");
+      var step = first ? first.offsetWidth + 8 : 400; /* 8 ≈ margin gap */
+      reelPaused = true;
+      gallery.scrollBy({ left: dir * step, behavior: "smooth" });
+      reelPos = null; /* resync drift position after manual scroll */
+      clearTimeout(touchTimer);
+      touchTimer = setTimeout(function () { reelPaused = false; reelPos = gallery.scrollLeft; }, 2000);
+    }
+    if (reelPrev) reelPrev.addEventListener("click", function () { reelStep(-1); });
+    if (reelNext) reelNext.addEventListener("click", function () { reelStep(1); });
   }
 
   /* --- Focus mode + camera-lens cursor ------------------------------------
