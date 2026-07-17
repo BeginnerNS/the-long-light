@@ -20,6 +20,7 @@
     "razorpay": "^2.9.6"
   },
   "devDependencies": {
+    "impeccable": "^3.2.1",
     "sharp": "^0.35.3"
   }
 }

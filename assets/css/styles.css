@@ -46,7 +46,6 @@ body {
   line-height: 1.75;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
 }
 
 img { display: block; max-width: 100%; height: auto; }
