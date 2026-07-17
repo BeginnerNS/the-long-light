@@ -162,7 +162,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 /* --- Filters -------------------------------------------------------------- */
 .filters {
   max-width: var(--wrap); margin: 2.25rem auto 0; padding-inline: var(--pad);
-  display: flex; flex-wrap: wrap; gap: 0.6rem;
+  display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center;
 }
 .filter {
   font-family: var(--font-display); font-weight: 500; font-size: 0.95rem;
@@ -175,28 +175,89 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   color: var(--bg-deep); background: var(--accent); border-color: var(--accent);
 }
 
-/* --- Gallery (masonry) ---------------------------------------------------- */
-.gallery {
-  max-width: var(--wrap); margin: 2rem auto 0; padding-inline: var(--pad);
-  column-count: 3; column-gap: clamp(0.75rem, 1.6vw, 1.4rem);
+/* --- Gallery (the contact reel) -------------------------------------------
+   One continuous 35mm strip: perforated edges, amber edge-printing between
+   frames (CSS counters — no markup needed), and a light-table loupe that
+   follows the cursor (JS, desktop only). --------------------------------- */
+:root {
+  --film-strip: oklch(0.125 0.009 60);
+  --film-hole: oklch(0.07 0.006 60);
+  --edge-print: oklch(0.72 0.13 62 / 0.75);
+  --font-edge: ui-monospace, "Cascadia Mono", Consolas, "Courier New", monospace;
 }
-@media (max-width: 900px) { .gallery { column-count: 2; } }
-@media (max-width: 540px)  { .gallery { column-count: 1; } }
+
+.gallery {
+  position: relative;
+  max-width: 46rem; margin: 2.25rem auto 0;
+  padding: 0.75rem clamp(2rem, 6vw, 2.6rem);
+  background-color: var(--film-strip);
+  background-image:
+    url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='26'%20height='34'%3E%3Crect%20x='7'%20y='9'%20width='13'%20height='17'%20rx='4'%20fill='%23100d0a'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='26'%20height='34'%3E%3Crect%20x='6'%20y='9'%20width='13'%20height='17'%20rx='4'%20fill='%23100d0a'/%3E%3C/svg%3E");
+  background-repeat: repeat-y, repeat-y;
+  background-position: left center, right center;
+  border-radius: 3px;
+  counter-reset: frame 11;
+  display: flex; flex-direction: column;
+}
 
 .shot {
-  break-inside: avoid; margin-bottom: clamp(0.75rem, 1.6vw, 1.4rem);
-  position: relative; border-radius: 4px; overflow: hidden;
-  background: var(--surface);
+  position: relative;
+  counter-increment: frame;
+  margin: 0;
+}
+.shot::before {
+  content: counter(frame) " \25B8 THE LONG LIGHT 400 \25B8 " counter(frame) "A";
+  content: counter(frame) " \25B8 THE LONG LIGHT 400 \25B8 " counter(frame) "A" / "";
+  display: block; text-align: center;
+  font-family: var(--font-edge); font-size: 0.62rem;
+  letter-spacing: 0.24em; color: var(--edge-print);
+  padding: 0.55rem 0 0.5rem; user-select: none;
+}
+.gallery::after {
+  content: "\25B8 END OF ROLL \25B8 EVERY FRAME: PRINT OR \20B9 49 DOWNLOAD \25B8";
+  content: "\25B8 END OF ROLL \25B8 EVERY FRAME: PRINT OR \20B9 49 DOWNLOAD \25B8" / "";
+  display: block; text-align: center;
+  font-family: var(--font-edge); font-size: 0.62rem;
+  letter-spacing: 0.24em; color: var(--edge-print);
+  padding: 0.6rem 0 0.5rem; user-select: none;
 }
 .shot.is-hidden { display: none; }
+
 .shot__btn {
-  display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in;
+  display: block; width: 100%; padding: 0; border: 0; background: var(--bg-deep);
+  cursor: zoom-in; border-radius: 2px; overflow: hidden; position: relative;
 }
 .shot__btn img {
-  width: 100%; transition: transform 0.7s var(--ease-expo), filter 0.5s var(--ease-out);
-  filter: saturate(0.94) brightness(0.94);
+  width: 100%; transition: transform 0.8s var(--ease-expo), filter 0.5s var(--ease-out);
+  filter: saturate(0.92) brightness(0.84);
 }
-.shot:hover .shot__btn img { transform: scale(1.045); filter: saturate(1.02) brightness(1); }
+.shot:hover .shot__btn img,
+.shot:focus-within .shot__btn img { transform: scale(1.015); filter: saturate(1.02) brightness(1.02); }
+
+/* the keeper: grease-pencil circle from the contact sheet */
+.shot--keeper .shot__btn::after {
+  content: ""; position: absolute; inset: 8% 16% auto 14%; height: 34%;
+  border: 2px solid oklch(0.74 0.15 62 / 0.6); border-radius: 50%;
+  transform: rotate(-7deg); pointer-events: none;
+  filter: blur(0.4px);
+}
+
+/* the loupe: a warm circle of light that follows the cursor (JS adds it) */
+.loupe {
+  position: absolute; top: 0; left: 0; width: 190px; height: 190px;
+  border-radius: 50%; pointer-events: none; z-index: 5;
+  background: radial-gradient(circle, oklch(0.85 0.09 75 / 0.15) 0%, oklch(0.85 0.09 75 / 0.05) 45%, transparent 70%);
+  border: 1px solid oklch(0.74 0.15 62 / 0.4);
+  mix-blend-mode: screen;
+  opacity: 0; transition: opacity 0.35s var(--ease-out);
+  will-change: transform;
+}
+.loupe.is-on { opacity: 1; }
+
+@media (max-width: 700px) {
+  .gallery { background-image: none; padding: 0.5rem 0.75rem; }
+}
 
 .shot__cap {
   position: absolute; inset: auto 0 0 0; display: flex; align-items: baseline;

@@ -274,6 +274,32 @@
     btn.addEventListener("click", function () { openAt(shot); });
   });
 
+  /* --- Light-table loupe ---------------------------------------------------
+     A warm circle of light that follows the cursor across the reel, like a
+     loupe on a light table. Desktop pointers only; skipped entirely when the
+     visitor prefers reduced motion. Pure transform updates - no layout. */
+  var gallery = document.getElementById("gallery");
+  if (gallery && !reduceMotion && window.matchMedia("(pointer: fine)").matches) {
+    var loupe = document.createElement("div");
+    loupe.className = "loupe";
+    loupe.setAttribute("aria-hidden", "true");
+    gallery.appendChild(loupe);
+    var loupeRaf = null;
+    gallery.addEventListener("pointermove", function (e) {
+      if (loupeRaf) return;
+      loupeRaf = requestAnimationFrame(function () {
+        loupeRaf = null;
+        var r = gallery.getBoundingClientRect();
+        loupe.style.transform =
+          "translate3d(" + (e.clientX - r.left - 95) + "px," + (e.clientY - r.top - 95) + "px,0)";
+        loupe.classList.add("is-on");
+      });
+    });
+    gallery.addEventListener("pointerleave", function () {
+      loupe.classList.remove("is-on");
+    });
+  }
+
   lbClose.addEventListener("click", closeLightbox);
   lbPrev.addEventListener("click", function () { step(-1); });
   lbNext.addEventListener("click", function () { step(1); });
