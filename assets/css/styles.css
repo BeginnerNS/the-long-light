@@ -34,6 +34,10 @@
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
+[hidden] {
+  display: none !important;
+}
+
 body {
   background: var(--bg);
   color: var(--ink);
@@ -313,9 +317,16 @@ body.reel-focus .light-table { position: relative; z-index: 160; }
   border: 1.5px solid oklch(0.74 0.15 62 / 0.55);
 }
 .loupe::after {
-  content: ""; position: absolute; left: 50%; top: 50%;
-  width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%;
-  background: oklch(0.74 0.15 62 / 0.9);
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  width: 14px;
+  height: 14px;
+  background: 
+    linear-gradient(90deg, transparent 6px, oklch(0.74 0.15 62 / 0.95) 6px, oklch(0.74 0.15 62 / 0.95) 8px, transparent 8px),
+    linear-gradient(0deg, transparent 6px, oklch(0.74 0.15 62 / 0.95) 6px, oklch(0.74 0.15 62 / 0.95) 8px, transparent 8px);
 }
 .loupe.is-on { opacity: 1; }
 .loupe.is-snap { animation: lensFlash 0.3s var(--ease-out); }
