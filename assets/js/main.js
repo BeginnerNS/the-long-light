@@ -291,13 +291,25 @@
         loupeRaf = null;
         var r = gallery.getBoundingClientRect();
         loupe.style.transform =
-          "translate3d(" + (e.clientX - r.left - 95) + "px," + (e.clientY - r.top - 95) + "px,0)";
+          "translate3d(" + (e.clientX - r.left + gallery.scrollLeft - 95) + "px," +
+          (e.clientY - r.top - 95) + "px,0)";
         loupe.classList.add("is-on");
       });
     });
     gallery.addEventListener("pointerleave", function () {
       loupe.classList.remove("is-on");
     });
+  }
+
+  /* Vertical wheel advances the horizontal reel while the cursor is over it
+     (shift+wheel and trackpads already scroll sideways natively). */
+  if (gallery) {
+    gallery.addEventListener("wheel", function (e) {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return; /* already horizontal */
+      if (gallery.scrollWidth <= gallery.clientWidth) return; /* nothing to scroll */
+      e.preventDefault();
+      gallery.scrollLeft += e.deltaY;
+    }, { passive: false });
   }
 
   lbClose.addEventListener("click", closeLightbox);
