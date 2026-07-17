@@ -17,6 +17,7 @@ if (fs.existsSync(envPath)) {
 const createOrder = require("./api/create-order.js");
 const verifyPayment = require("./api/verify-payment.js");
 const download = require("./api/download.js");
+const downloadBundle = require("./api/download-bundle.js");
 
 const MIME = {
   ".html": "text/html", ".css": "text/css", ".js": "text/javascript",
@@ -50,6 +51,7 @@ http.createServer((req, res) => {
   if (url === "/api/create-order") return wrap(createOrder, req, res);
   if (url === "/api/verify-payment") return wrap(verifyPayment, req, res);
   if (url === "/api/download") return wrap(download, req, res);
+  if (url === "/api/download-bundle") return wrap(downloadBundle, req, res);
 
   const file = path.join(__dirname, url === "/" ? "index.html" : decodeURIComponent(url));
   if (!file.startsWith(__dirname) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) {

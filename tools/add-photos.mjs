@@ -30,7 +30,7 @@ const INDEX = path.join(ROOT, "index.html");
 const MARKER = "<!-- gallery:insert";
 const MAX_EDGE = 1800;
 const WATERMARK = "The Long Light";
-const CATEGORIES = new Set(["landscape", "street"]);
+const CATEGORIES = new Set(["landscape", "street", "botanical", "architecture"]);
 
 function titleCase(slugWords) {
   const s = slugWords.replace(/-+/g, " ").trim();

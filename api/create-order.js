@@ -1,14 +1,11 @@
 /* POST /api/create-order
-   Creates a Razorpay order for one photograph. Prices are decided HERE,
-   server-side, so the browser can never tamper with the amount. */
+   Creates a Razorpay order for one or more photographs.
+   Accepts { items: [{path, title}, ...] } for cart checkout,
+   or legacy { photo, title } for single-photo (backwards compat).
+   Prices are decided HERE server-side — browser cannot tamper. */
 const Razorpay = require("razorpay");
 
-/* Price per photo in paise (Rs x 100). Add per-photo overrides keyed by
-   the image path the site sends; anything not listed uses the default. */
-const DEFAULT_PRICE_PAISE = 4900; /* Rs 49 */
-const PRICES_PAISE = {
-  /* "assets/img/tigers-nest-monastery-print.jpg": 79900, */
-};
+const DEFAULT_PRICE_PAISE = 4900; /* Rs 49 per photo */
 
 const ALLOWED_ORIGINS = [
   "https://beginnerns.github.io",
@@ -34,15 +31,26 @@ module.exports = async (req, res) => {
     return res.status(401).json({ error: "Payment keys are not configured" });
   }
 
-  const { photo, title } = req.body || {};
-  if (!photo || typeof photo !== "string") {
-    return res.status(400).json({ error: "Missing photo id" });
+  const body = req.body || {};
+
+  /* Normalise to items array — support legacy single-photo calls */
+  let items = [];
+  if (Array.isArray(body.items) && body.items.length) {
+    items = body.items;
+  } else if (body.photo && typeof body.photo === "string") {
+    items = [{ path: body.photo, title: body.title || "" }];
+  } else {
+    return res.status(400).json({ error: "Missing items or photo" });
   }
 
-  const amount = PRICES_PAISE[photo] || DEFAULT_PRICE_PAISE;
-  if (!Number.isInteger(amount) || amount < 100) {
-    return res.status(400).json({ error: "Amount must be at least 100 paise" });
+  /* Validate each path */
+  for (const item of items) {
+    if (!item.path || typeof item.path !== "string" || !/^assets\/img\/[a-z0-9-]+\.jpg$/.test(item.path)) {
+      return res.status(400).json({ error: "Invalid photo path: " + item.path });
+    }
   }
+
+  const amount = DEFAULT_PRICE_PAISE * items.length;
 
   const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
@@ -53,10 +61,10 @@ module.exports = async (req, res) => {
     const order = await razorpay.orders.create({
       amount,
       currency: "INR",
-      receipt: ("photo-" + Date.now()).slice(0, 40),
+      receipt: ("cart-" + Date.now()).slice(0, 40),
       notes: {
-        photo,
-        title: String(title || "").slice(0, 200),
+        items: JSON.stringify(items.map(function (i) { return i.path; })),
+        count: String(items.length),
       },
     });
     return res.status(200).json({
@@ -64,6 +72,7 @@ module.exports = async (req, res) => {
       amount: order.amount,
       currency: order.currency,
       key_id: process.env.RAZORPAY_KEY_ID,
+      items: items,
     });
   } catch (err) {
     const status = err && err.statusCode === 401 ? 401 : 500;

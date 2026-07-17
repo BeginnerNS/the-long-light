@@ -115,6 +115,52 @@
     };
   }
 
+  var navCartPill = document.getElementById("nav-cart-pill");
+  var navCartCount = document.getElementById("nav-cart-count");
+  var lbCartLink = document.getElementById("lb-cart-link");
+  var lbCartCount = document.getElementById("lb-cart-count");
+  var toastEl = document.getElementById("toast");
+  var toastTimer = null;
+
+  function showToast(msg) {
+    if (!toastEl) return;
+    toastEl.textContent = msg;
+    toastEl.classList.add("is-visible");
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      toastEl.classList.remove("is-visible");
+    }, 3000);
+  }
+
+  function updateCartUI() {
+    var count = window.TLLCart ? TLLCart.count() : 0;
+    if (navCartCount) navCartCount.textContent = count;
+    if (navCartPill) {
+      if (count > 0) navCartPill.classList.add("has-items");
+      else navCartPill.classList.remove("has-items");
+    }
+    if (lbCartLink && lbCartCount) {
+      if (count > 0) {
+        lbCartLink.hidden = false;
+        lbCartCount.textContent = count;
+      } else {
+        lbCartLink.hidden = true;
+      }
+    }
+    if (!lb.hidden && activeList[activeIndex]) {
+      var data = shotData(activeList[activeIndex]);
+      if (window.TLLCart && TLLCart.inCart(data.path)) {
+        lbBuy.textContent = "In cart ✓";
+        lbBuy.classList.add("is-in-cart");
+      } else {
+        lbBuy.textContent = "Add to cart · ₹49";
+        lbBuy.classList.remove("is-in-cart");
+      }
+    }
+  }
+
+  window.addEventListener("cart:update", updateCartUI);
+
   function render() {
     var shot = activeList[activeIndex];
     if (!shot) return;
@@ -133,14 +179,9 @@
     lbTitle.textContent = data.title;
     lbCount.textContent = (activeIndex + 1) + " / " + activeList.length;
     lbStatus.textContent = "";
-    /* mailto is the standing fallback href; the click handler upgrades
-       it to Razorpay checkout when the payment API is available */
-    lbBuy.href = "mailto:" + ENQUIRY_EMAIL +
-      "?subject=" + encodeURIComponent("Purchase: " + data.title + " (The Long Light)") +
-      "&body=" + encodeURIComponent("Hi Nisargi,\n\nI'd like to buy \"" + data.title + "\" - please send me the price for a print / full-resolution download.\n\nThanks!");
-    /* display price only; the server (api/create-order.js) remains the
-       source of truth for what is actually charged */
-    lbBuy.textContent = canCheckout() ? "Buy full-resolution · ₹49" : "Buy print / full-res";
+    
+    updateCartUI();
+
     var single = activeList.length < 2;
     lbPrev.style.visibility = single ? "hidden" : "visible";
     lbNext.style.visibility = single ? "hidden" : "visible";
@@ -175,100 +216,27 @@
     render();
   }
 
-  /* --- Razorpay checkout -------------------------------------------------- */
-  function canCheckout() {
-    return typeof window.Razorpay === "function";
-  }
-
-  function setStatus(msg) {
-    lbStatus.textContent = msg;
-  }
-
-  function startCheckout(data) {
-    lbBuy.setAttribute("aria-disabled", "true");
-    setStatus("Preparing secure checkout…");
-    fetch(PAYMENT_API_BASE + "/api/create-order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ photo: data.path, title: data.title })
-    })
-      .then(function (r) {
-        if (!r.ok) throw new Error("create-order failed: " + r.status);
-        return r.json();
-      })
-      .then(function (order) {
-        setStatus("");
-        var rzp = new window.Razorpay({
-          key: order.key_id,
-          order_id: order.order_id,
-          amount: order.amount,
-          currency: order.currency,
-          name: "The Long Light",
-          description: data.title,
-          notes: { photo: data.path },
-          theme: { color: "#df9542" },
-          modal: {
-            ondismiss: function () {
-              lbBuy.removeAttribute("aria-disabled");
-              setStatus("Checkout closed — you have not been charged.");
-            }
-          },
-          handler: function (resp) {
-            setStatus("Verifying payment…");
-            fetch(PAYMENT_API_BASE + "/api/verify-payment", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                razorpay_order_id: resp.razorpay_order_id,
-                razorpay_payment_id: resp.razorpay_payment_id,
-                razorpay_signature: resp.razorpay_signature
-              })
-            })
-              .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
-              .then(function (v) {
-                lbBuy.removeAttribute("aria-disabled");
-                if (v.ok && v.body.verified) {
-                  var dl = PAYMENT_API_BASE + "/api/download?order_id=" + encodeURIComponent(resp.razorpay_order_id) +
-                    "&payment_id=" + encodeURIComponent(resp.razorpay_payment_id) +
-                    "&signature=" + encodeURIComponent(resp.razorpay_signature) +
-                    "&photo=" + encodeURIComponent(data.path);
-                  var a = document.createElement("a");
-                  a.href = dl; a.download = "";
-                  document.body.appendChild(a); a.click(); a.remove();
-                  lbStatus.innerHTML = "";
-                  lbStatus.appendChild(document.createTextNode("Payment verified — your download is starting. "));
-                  var link = document.createElement("a");
-                  link.href = dl; link.textContent = "Download again"; link.style.color = "var(--accent)";
-                  lbStatus.appendChild(link);
-                } else {
-                  setStatus("Payment received but could not be verified. Please email " + ENQUIRY_EMAIL + " with your payment id: " + resp.razorpay_payment_id);
-                }
-              })
-              .catch(function () {
-                lbBuy.removeAttribute("aria-disabled");
-                setStatus("Could not verify the payment. Please email " + ENQUIRY_EMAIL + " with your payment id: " + resp.razorpay_payment_id);
-              });
-          }
-        });
-        rzp.on("payment.failed", function (resp) {
-          lbBuy.removeAttribute("aria-disabled");
-          var reason = resp && resp.error && resp.error.description ? " (" + resp.error.description + ")" : "";
-          setStatus("Payment failed" + reason + ". You have not been charged — please try again.");
-        });
-        rzp.open();
-      })
-      .catch(function () {
-        lbBuy.removeAttribute("aria-disabled");
-        setStatus("Could not start checkout. Please email " + ENQUIRY_EMAIL + " instead.");
-      });
-  }
-
   lbBuy.addEventListener("click", function (e) {
-    if (!canCheckout()) return; /* let the mailto fallback proceed */
     e.preventDefault();
-    if (lbBuy.getAttribute("aria-disabled") === "true") return;
-    startCheckout(shotData(activeList[activeIndex]));
+    if (!window.TLLCart) return;
+    var data = shotData(activeList[activeIndex]);
+    if (TLLCart.inCart(data.path)) {
+      TLLCart.remove(data.path);
+      showToast("Removed from cart: " + data.title);
+    } else {
+      TLLCart.add({
+        path: data.path,
+        title: data.title,
+        thumb: data.path
+      });
+      showToast("Added to cart: " + data.title);
+    }
+    updateCartUI();
   });
+
+  // Initial cart UI update
+  setTimeout(updateCartUI, 100);
+
 
   shots.forEach(function (shot) {
     var btn = shot.querySelector(".shot__btn");

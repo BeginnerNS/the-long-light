@@ -1,0 +1,216 @@
+/* ==========================================================================
+   cart.css — The Long Light cart page styles
+   ========================================================================== */
+
+/* --- Cart page layout ----------------------------------------------------- */
+.cart-page {
+  min-height: 100vh;
+  padding-top: clamp(5rem, 10vw, 8rem);
+  padding-bottom: 6rem;
+}
+
+.cart-page__inner {
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: var(--pad);
+  display: grid;
+  grid-template-columns: 1fr min(360px, 100%);
+  grid-template-rows: auto 1fr;
+  gap: 2rem 3rem;
+}
+
+.cart-page__header {
+  grid-column: 1 / -1;
+}
+
+.cart-page__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.cart-page__lead {
+  color: var(--muted);
+  max-width: 52ch;
+}
+
+/* --- Empty state ---------------------------------------------------------- */
+.cart-empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.cart-empty__icon {
+  color: var(--muted);
+  opacity: 0.4;
+}
+
+.cart-empty__msg {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--muted);
+}
+
+/* --- Cart grid ------------------------------------------------------------ */
+.cart-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  align-self: start;
+}
+
+.cart-card {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  background: var(--surface);
+  transition: background 0.2s;
+}
+.cart-card:first-child { border-radius: 12px 12px 0 0; }
+.cart-card:last-child  { border-radius: 0 0 12px 12px; }
+.cart-card:only-child  { border-radius: 12px; }
+
+.cart-card__thumb {
+  width: 80px;
+  height: 64px;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.cart-card__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cart-card__info {
+  min-width: 0;
+}
+.cart-card__title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cart-card__price {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 0.15rem;
+}
+
+.cart-card__remove {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, background 0.2s;
+}
+.cart-card__remove:hover {
+  color: #f87171;
+  background: oklch(0.4 0.12 15 / 0.15);
+}
+
+/* --- Summary -------------------------------------------------------------- */
+.cart-summary {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  position: sticky;
+  top: 6rem;
+}
+
+.cart-summary__inner {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cart-summary__line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.cart-summary__note {
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.cart-summary__checkout {
+  width: 100%;
+  font-size: 1rem;
+  padding: 0.85rem 1.5rem;
+  text-align: center;
+}
+.cart-summary__checkout[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.cart-summary__status {
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.5;
+  min-height: 1.2em;
+}
+.cart-summary__status.is-error {
+  color: #f87171;
+}
+
+.cart-clear {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-align: center;
+  padding: 0.25rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+.cart-clear:hover { color: #f87171; }
+
+/* --- Responsive ----------------------------------------------------------- */
+@media (max-width: 720px) {
+  .cart-page__inner {
+    grid-template-columns: 1fr;
+  }
+  .cart-summary {
+    grid-column: 1;
+    position: static;
+  }
+}
