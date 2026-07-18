@@ -9,6 +9,7 @@
 
   <link rel="canonical" href="https://the-long-light-xi.vercel.app/cart">
   <script>document.documentElement.classList.remove('no-js');document.documentElement.classList.add('js');</script>
+  <script>(function(){try{var t=localStorage.getItem('tll_theme');if(t!=='light'&&t!=='dark')t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,6 +27,10 @@
         <a href="index.html#work">Work</a>
         <a href="index.html#about">About</a>
         <a href="index.html#contact">Prints</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode">
+          <svg class="theme-toggle__sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke-linecap="round"/></svg>
+          <svg class="theme-toggle__moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
         <a class="nav__cart-pill" href="cart.html" aria-label="Cart" id="nav-cart-pill">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="9" cy="21" r="1" fill="currentColor"/><circle cx="20" cy="21" r="1" fill="currentColor"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           <span class="nav__cart-count" id="nav-cart-count">0</span>
@@ -40,7 +45,6 @@
         <div class="cart-page__header">
           <span class="cart-page__slug">THE LONG LIGHT &middot; PRINT LAB &middot; ORDER SLIP</span>
           <h1 class="cart-page__title">Your order</h1>
-          <p class="cart-page__lead">The frames you&rsquo;ve pulled from the reel. Full-resolution and watermark-free, ₹49 each, delivered as a ZIP the moment payment clears.</p>
         </div>
 
         <!-- Empty state -->
@@ -59,15 +63,25 @@
         <!-- Summary & checkout -->
         <div class="cart-summary" id="cart-summary" hidden>
           <div class="cart-summary__inner">
+            <p class="cart-summary__save" id="cart-save" hidden></p>
             <div class="cart-summary__line">
               <span id="cart-item-count">0 photos</span>
               <span id="cart-total">₹0</span>
             </div>
-            <p class="cart-summary__note">Instant ZIP download after payment. Full-resolution, no watermark. Personal use license.</p>
+            <p class="cart-summary__note">Buy any 3 for ₹140. Instant ZIP after payment — full-resolution, no watermark, personal-use license.</p>
             <button class="btn btn--solid cart-summary__checkout" id="cart-checkout" type="button">
               Checkout · ₹<span id="cart-total-num">0</span>
             </button>
             <p class="cart-summary__status" id="cart-status" role="status" aria-live="polite"></p>
+            <div class="cart-invoice" id="cart-invoice" hidden>
+              <span class="cart-invoice__label">Invoice</span>
+              <button class="cart-invoice__btn" id="invoice-view" type="button" aria-label="View invoice">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+              <button class="cart-invoice__btn" id="invoice-download" type="button" aria-label="Download invoice">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+              </button>
+            </div>
             <button class="cart-clear" id="cart-clear" type="button">Clear cart</button>
           </div>
         </div>
@@ -83,7 +97,9 @@
   <div class="grain" aria-hidden="true"></div>
 
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="assets/js/cart.js"></script>
+  <script src="assets/js/theme.js"></script>
   <script>
   (function () {
     "use strict";
@@ -118,11 +134,22 @@
     var clearBtn = document.getElementById("cart-clear");
     var navCount = document.getElementById("nav-cart-count");
     var navPill = document.getElementById("nav-cart-pill");
+    var saveEl = document.getElementById("cart-save");
+    var invoiceEl = document.getElementById("cart-invoice");
+
+    /* Bundle pricing — MUST match api/create-order.js: every 3 photos ₹140,
+       the rest ₹49 each. Server is the source of truth for the charge; this
+       is only for display. */
+    function bundleTotal(count) {
+      return Math.floor(count / 3) * 140 + (count % 3) * PRICE;
+    }
 
     function renderCart() {
       var items = TLLCart.get();
       var count = items.length;
-      var total = TLLCart.total();
+      var subtotal = count * PRICE;
+      var total = bundleTotal(count);
+      var saved = subtotal - total;
 
       /* Nav pill */
       if (navCount) navCount.textContent = count;
@@ -136,9 +163,21 @@
       }
       emptyEl.hidden = true;
       summaryEl.hidden = false;
+      if (invoiceEl) invoiceEl.hidden = true; /* fresh order — hide any prior invoice */
       countEl.textContent = count + (count === 1 ? " photo" : " photos");
       totalEl.textContent = "₹" + total;
       totalNumEl.textContent = total;
+      if (saveEl) {
+        if (saved > 0) {
+          saveEl.hidden = false;
+          saveEl.textContent = "Bundle pricing applied — you save ₹" + saved;
+        } else if (count < 3) {
+          saveEl.hidden = false;
+          saveEl.textContent = "Add " + (3 - count) + " more for the ₹140 bundle";
+        } else {
+          saveEl.hidden = true;
+        }
+      }
 
       grid.innerHTML = "";
       items.forEach(function (item, i) {
@@ -181,6 +220,81 @@
     function setStatus(msg, isError) {
       statusEl.textContent = msg;
       statusEl.className = "cart-summary__status" + (isError ? " is-error" : "");
+    }
+
+    /* ---- Invoice (client-side PDF, view + download) ----
+       Built after a verified payment from the items purchased. Uses "Rs"
+       rather than the ₹ glyph because jsPDF's core fonts can't encode it. */
+    function makeInvoice(items, resp) {
+      var viewBtn = document.getElementById("invoice-view");
+      var dlBtn = document.getElementById("invoice-download");
+      var ctor = window.jspdf && window.jspdf.jsPDF;
+      if (!ctor || !viewBtn || !dlBtn) { if (invoiceEl) invoiceEl.hidden = true; return false; }
+
+      var MID = String.fromCharCode(183), MUL = String.fromCharCode(215);
+      var count = items.length, subtotal = count * PRICE, total = bundleTotal(count), saved = subtotal - total;
+      var invNo = (String(resp.razorpay_order_id || "").replace("order_", "INV-")) || "INV";
+      var date = new Date().toLocaleDateString("en-IN", { year: "numeric", month: "short", day: "numeric" });
+
+      var doc = new ctor({ unit: "pt", format: "a4" });
+      var L = 56, R = 539, y = 76;
+      doc.setFont("times", "bold"); doc.setFontSize(22); doc.setTextColor(24);
+      doc.text("The Long Light", L, y);
+      doc.setFont("courier", "normal"); doc.setFontSize(9); doc.setTextColor(150, 108, 46);
+      doc.text("PRINT LAB " + MID + " INVOICE", L, y + 15);
+      doc.setTextColor(90);
+      doc.text("Invoice   " + invNo, R, y, { align: "right" });
+      doc.text("Date      " + date, R, y + 14, { align: "right" });
+
+      y += 58;
+      doc.setFont("helvetica", "bold"); doc.setFontSize(8); doc.setTextColor(130);
+      doc.text("FROM", L, y); doc.text("PAYMENT", R, y, { align: "right" });
+      doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(30);
+      doc.text("Nisargi Shah", L, y + 15);
+      doc.text("The Long Light " + MID + " Mumbai, India", L, y + 30);
+      doc.text("nisargi3112@gmail.com", L, y + 45);
+      doc.text("Razorpay (paid)", R, y + 15, { align: "right" });
+      doc.setFontSize(8); doc.setTextColor(110);
+      doc.text(String(resp.razorpay_payment_id || ""), R, y + 30, { align: "right" });
+
+      y += 82;
+      doc.setDrawColor(205); doc.line(L, y, R, y); y += 18;
+      doc.setFont("helvetica", "bold"); doc.setFontSize(8); doc.setTextColor(130);
+      doc.text("DESCRIPTION", L, y); doc.text("AMOUNT", R, y, { align: "right" }); y += 8;
+      doc.setDrawColor(230); doc.line(L, y, R, y); y += 18;
+      items.forEach(function (it, i) {
+        doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(35);
+        doc.text((i + 1) + ".  " + String(it.title || "Photograph"), L, y);
+        doc.text("Rs " + PRICE, R, y, { align: "right" });
+        doc.setFontSize(8); doc.setTextColor(140);
+        doc.text("full-resolution download, no watermark", L + 14, y + 12);
+        y += 30;
+      });
+      doc.setDrawColor(205); doc.line(L, y, R, y); y += 22;
+
+      doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(90);
+      doc.text("Subtotal (" + count + " " + MUL + " Rs " + PRICE + ")", R - 165, y);
+      doc.setTextColor(35); doc.text("Rs " + subtotal, R, y, { align: "right" }); y += 18;
+      if (saved > 0) {
+        doc.setTextColor(150, 108, 46);
+        doc.text("Bundle discount", R - 165, y);
+        doc.text("- Rs " + saved, R, y, { align: "right" }); y += 18;
+      }
+      doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.setTextColor(20);
+      doc.text("Total paid", R - 165, y + 6);
+      doc.text("Rs " + total, R, y + 6, { align: "right" });
+
+      doc.setFont("courier", "normal"); doc.setFontSize(8); doc.setTextColor(150);
+      doc.text("Paid in full via Razorpay. Personal-use license, non-transferable. Thank you.", L, 790);
+
+      var url = URL.createObjectURL(doc.output("blob"));
+      viewBtn.onclick = function () { window.open(url, "_blank", "noopener"); };
+      dlBtn.onclick = function () {
+        var a = document.createElement("a");
+        a.href = url; a.download = "the-long-light-" + invNo + ".pdf";
+        document.body.appendChild(a); a.click(); a.remove();
+      };
+      return true;
     }
 
     /* ---- Checkout ---- */
@@ -232,7 +346,8 @@
                 .then(function (v) {
                   checkoutBtn.removeAttribute("aria-disabled");
                   if (v.ok && v.body.verified) {
-                    var paths = TLLCart.get().map(function (i) { return i.path; });
+                    var invItems = TLLCart.get();
+                    var paths = invItems.map(function (i) { return i.path; });
                     var dl = PAYMENT_API_BASE + "/api/download-bundle" +
                       "?order_id=" + encodeURIComponent(resp.razorpay_order_id) +
                       "&payment_id=" + encodeURIComponent(resp.razorpay_payment_id) +
@@ -241,15 +356,19 @@
                     var a = document.createElement("a");
                     a.href = dl; a.download = "the-long-light-downloads.zip";
                     document.body.appendChild(a); a.click(); a.remove();
+
+                    var hasInvoice = makeInvoice(invItems, resp);
+
                     TLLCart.clear();
                     renderCart();
                     statusEl.innerHTML = "";
-                    statusEl.appendChild(document.createTextNode("Payment verified — your ZIP download is starting. "));
+                    statusEl.appendChild(document.createTextNode("Payment verified — your ZIP is downloading. "));
                     var link = document.createElement("a");
                     link.href = dl; link.textContent = "Download again"; link.style.color = "var(--accent)";
                     statusEl.appendChild(link);
                     summaryEl.hidden = false; /* keep visible so status shows */
                     emptyEl.hidden = true;
+                    if (invoiceEl) invoiceEl.hidden = !hasInvoice;
                   } else {
                     setStatus("Payment received but could not be verified. Email " + ENQUIRY_EMAIL + " with payment id: " + resp.razorpay_payment_id, true);
                   }

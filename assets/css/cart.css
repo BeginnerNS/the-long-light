@@ -176,6 +176,32 @@
 }
 .cart-clear:hover { color: oklch(0.72 0.17 25); }
 
+/* --- Bundle savings line -------------------------------------------------- */
+.cart-summary__save {
+  font-family: var(--font-edge); font-size: 0.7rem; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--accent); text-align: center;
+  padding: 0.5rem 0.7rem; border: 1px dashed var(--line-hi); border-radius: 3px;
+}
+
+/* --- Invoice (icon-only view + download) ---------------------------------- */
+.cart-invoice {
+  display: flex; align-items: center; justify-content: center; gap: 0.55rem;
+}
+.cart-invoice__label {
+  font-family: var(--font-edge); font-size: 0.68rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--muted); margin-right: 0.25rem;
+}
+.cart-invoice__btn {
+  width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+  background: transparent; border: 1px solid var(--line); color: var(--ink); cursor: pointer;
+  transition: color 0.25s, border-color 0.25s, background 0.25s, transform 0.25s;
+}
+.cart-invoice__btn:hover {
+  color: var(--accent); border-color: var(--accent);
+  background: color-mix(in oklab, var(--accent) 12%, transparent);
+}
+.cart-invoice__btn:active { transform: scale(0.92); }
+
 /* --- Responsive ----------------------------------------------------------- */
 @media (max-width: 860px) {
   .cart-page__inner { grid-template-columns: 1fr; gap: 2.5rem; }

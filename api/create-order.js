@@ -5,7 +5,17 @@
    Prices are decided HERE server-side — browser cannot tamper. */
 const Razorpay = require("razorpay");
 
-const DEFAULT_PRICE_PAISE = 4900; /* Rs 49 per photo */
+const PRICE_PAISE = 4900;        /* Rs 49 per photo */
+const BUNDLE_OF_3_PAISE = 14000; /* Rs 140 for every 3 (save Rs 7) */
+
+/* Bundle pricing: every complete group of 3 photos costs Rs 140,
+   the remaining 1-2 photos are Rs 49 each. Kept identical on the client
+   for display, but THIS is the amount actually charged. */
+function priceForCountPaise(count) {
+  const bundles = Math.floor(count / 3);
+  const rest = count % 3;
+  return bundles * BUNDLE_OF_3_PAISE + rest * PRICE_PAISE;
+}
 
 const ALLOWED_ORIGINS = [
   "https://beginnerns.github.io",
@@ -50,7 +60,7 @@ module.exports = async (req, res) => {
     }
   }
 
-  const amount = DEFAULT_PRICE_PAISE * items.length;
+  const amount = priceForCountPaise(items.length);
 
   const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,

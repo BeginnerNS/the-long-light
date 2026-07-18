@@ -596,3 +596,67 @@ body.reel-focus .dim-overlay { opacity: 1; }
   .shot:hover .shot__btn img { transform: none; }
 }
 
+/* ==========================================================================
+   Theme toggle + light mode. Dark is the default (:root above). An inline
+   <head> script sets data-theme before paint, so these overrides just supply
+   the warm-beige "paper" palette when the visitor picks light.
+   ========================================================================== */
+.theme-toggle {
+  display: inline-grid; place-items: center; width: 38px; height: 38px;
+  border-radius: 999px; background: transparent; border: 1px solid var(--line-hi);
+  color: var(--muted); cursor: pointer;
+  transition: color 0.25s var(--ease-out), border-color 0.25s var(--ease-out);
+}
+.theme-toggle:hover { color: var(--ink); border-color: var(--accent); }
+.theme-toggle svg { display: block; }
+.theme-toggle__moon { display: none; }
+[data-theme="light"] .theme-toggle__sun { display: none; }
+[data-theme="light"] .theme-toggle__moon { display: block; }
+
+[data-theme="light"] {
+  --bg: oklch(0.930 0.020 78);
+  --bg-deep: oklch(0.880 0.024 74);
+  --surface: oklch(0.970 0.014 80);
+  --surface-hi: oklch(0.995 0.010 82);
+  --ink: oklch(0.260 0.024 55);
+  --muted: oklch(0.440 0.030 58);
+  --accent: oklch(0.500 0.160 48);
+  --accent-strong: oklch(0.420 0.160 44);
+  --line: oklch(0.30 0.03 55 / 0.16);
+  --line-hi: oklch(0.30 0.03 55 / 0.30);
+  --edge-print: oklch(0.52 0.14 55 / 0.9);
+  /* the film base stays near-black in both modes — black film reads on paper */
+}
+
+/* solid button: near-white label on the deep-ember button in light mode */
+[data-theme="light"] .btn--solid { color: oklch(0.97 0.012 82); }
+
+/* the film strip's light table glows warm and light instead of warm and dark */
+[data-theme="light"] .light-table {
+  background: radial-gradient(85% 120% at 50% 50%,
+    oklch(0.86 0.05 80), oklch(0.80 0.05 76) 55%, oklch(0.72 0.05 72) 100%);
+}
+[data-theme="light"] #cart-main {
+  background:
+    radial-gradient(120% 80% at 50% -10%, oklch(0.86 0.05 80), transparent 60%),
+    var(--bg-deep);
+}
+[data-theme="light"] .grain { opacity: 0.035; mix-blend-mode: multiply; }
+
+/* Hero text sits over a photograph, so keep it light in BOTH themes */
+[data-theme="light"] .hero__title,
+[data-theme="light"] .hero__tagline,
+[data-theme="light"] .hero__cue { color: oklch(0.96 0.010 80); }
+[data-theme="light"] .hero__eyebrow { color: oklch(0.82 0.120 68); }
+
+/* Nav over the hero photo (index only, before scroll) needs light text */
+[data-theme="light"] body.has-hero .nav:not(.is-scrolled) .nav__mark,
+[data-theme="light"] body.has-hero .nav:not(.is-scrolled) .nav__links a,
+[data-theme="light"] body.has-hero .nav:not(.is-scrolled) .theme-toggle {
+  color: oklch(0.95 0.010 80);
+}
+[data-theme="light"] body.has-hero .nav:not(.is-scrolled) .theme-toggle { border-color: oklch(0.95 0.01 80 / 0.35); }
+[data-theme="light"] body.has-hero .nav:not(.is-scrolled) .nav__cta {
+  color: oklch(0.96 0.010 80); border-color: oklch(0.96 0.01 80 / 0.4);
+}
+
