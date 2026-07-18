@@ -35,7 +35,7 @@
 }
 .cart-page__slug {
   font-family: var(--font-edge); font-size: 0.68rem;
-  letter-spacing: 0.26em; color: var(--edge-print);
+  letter-spacing: 0.26em; color: var(--accent);
   display: block; margin-bottom: 0.85rem;
 }
 .cart-page__title {
@@ -61,11 +61,11 @@
 }
 .cart-empty__icon { color: var(--edge-print); }
 .cart-empty__msg {
-  font-family: var(--font-body); font-style: italic; font-size: 1.35rem; color: var(--ink);
+  font-family: var(--font-body); font-style: italic; font-size: 1.35rem; color: oklch(0.95 0.012 78);
 }
 .cart-empty__note {
   font-family: var(--font-edge); font-size: 0.68rem; letter-spacing: 0.2em;
-  color: var(--muted); margin-top: -0.4rem;
+  color: oklch(0.76 0.015 72); margin-top: -0.4rem;
 }
 
 /* --- Cart items: film frames ---------------------------------------------- */
@@ -105,20 +105,22 @@
 .cart-card:hover .cart-card__thumb img { transform: scale(1.04); }
 
 .cart-card__info { min-width: 0; }
+/* film-frame card contents sit on the near-black film base — fixed light in
+   both themes so they never vanish in light mode */
 .cart-card__title {
   font-family: var(--font-body); font-style: italic; font-size: 1.2rem;
-  color: var(--ink); margin-bottom: 0.35rem;
+  color: oklch(0.96 0.012 78); margin-bottom: 0.35rem;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .cart-card__price {
   font-family: var(--font-edge); font-size: 0.72rem; letter-spacing: 0.08em;
-  color: var(--muted); text-transform: uppercase;
+  color: oklch(0.76 0.015 72); text-transform: uppercase;
 }
 
 .cart-card__remove {
   flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
   display: grid; place-items: center; cursor: pointer;
-  background: transparent; border: 1px solid var(--line); color: var(--muted);
+  background: transparent; border: 1px solid oklch(1 0 0 / 0.18); color: oklch(0.76 0.015 72);
   transition: color 0.25s, border-color 0.25s, background 0.25s, transform 0.25s;
 }
 .cart-card__remove:hover {
@@ -139,7 +141,7 @@
 .cart-summary__inner::before {
   content: "THE LONG LIGHT \00B7 PRINT LAB";
   font-family: var(--font-edge); font-size: 0.64rem; letter-spacing: 0.22em;
-  color: var(--edge-print);
+  color: var(--accent);
   padding-bottom: 1rem; border-bottom: 1px dashed var(--line-hi);
 }
 .cart-summary__line {

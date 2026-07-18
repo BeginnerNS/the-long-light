@@ -367,10 +367,11 @@ body.reel-focus .dim-overlay { opacity: 1; }
   pointer-events: none;
 }
 .shot:hover .shot__cap, .shot:focus-within .shot__cap { opacity: 1; transform: none; }
-.shot__title { font-family: var(--font-body); font-style: italic; font-size: 1.05rem; color: var(--ink); }
+/* captions sit over the photograph — fixed light in BOTH themes */
+.shot__title { font-family: var(--font-body); font-style: italic; font-size: 1.05rem; color: oklch(0.96 0.012 78); }
 .shot__cat {
   font-family: var(--font-display); font-size: 0.72rem; font-weight: 500;
-  letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); white-space: nowrap;
+  letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.80 0.13 66); white-space: nowrap;
 }
 .gallery__empty { text-align: center; color: var(--muted); padding: 3rem var(--pad); font-style: italic; }
 
@@ -609,9 +610,11 @@ body.reel-focus .dim-overlay { opacity: 1; }
 }
 .theme-toggle:hover { color: var(--ink); border-color: var(--accent); }
 .theme-toggle svg { display: block; }
-.theme-toggle__moon { display: none; }
-[data-theme="light"] .theme-toggle__sun { display: none; }
-[data-theme="light"] .theme-toggle__moon { display: block; }
+/* icon shows the CURRENT mode: moon at night (dark), sun by day (light) */
+.theme-toggle__sun { display: none; }
+.theme-toggle__moon { display: block; }
+[data-theme="light"] .theme-toggle__moon { display: none; }
+[data-theme="light"] .theme-toggle__sun { display: block; }
 
 [data-theme="light"] {
   --bg: oklch(0.930 0.020 78);
@@ -620,12 +623,13 @@ body.reel-focus .dim-overlay { opacity: 1; }
   --surface-hi: oklch(0.995 0.010 82);
   --ink: oklch(0.260 0.024 55);
   --muted: oklch(0.440 0.030 58);
-  --accent: oklch(0.500 0.160 48);
-  --accent-strong: oklch(0.420 0.160 44);
+  --accent: oklch(0.470 0.150 48);
+  --accent-strong: oklch(0.400 0.150 44);
   --line: oklch(0.30 0.03 55 / 0.16);
   --line-hi: oklch(0.30 0.03 55 / 0.30);
-  --edge-print: oklch(0.52 0.14 55 / 0.9);
-  /* the film base stays near-black in both modes — black film reads on paper */
+  /* --edge-print is left at its dark-theme value: edge codes always sit on the
+     dark film base, so they must stay light-amber in both themes. Amber text
+     on the beige surfaces (cart slug/receipt) uses --accent instead. */
 }
 
 /* solid button: near-white label on the deep-ember button in light mode */
