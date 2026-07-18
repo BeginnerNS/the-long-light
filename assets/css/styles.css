@@ -470,9 +470,11 @@ body.reel-focus .dim-overlay { opacity: 1; }
   box-shadow: 0 30px 80px -20px oklch(0 0 0 / 0.8);
 }
 .js .lightbox__img { transition: opacity 0.3s var(--ease-out); }
-.lightbox__cap { display: flex; align-items: center; gap: 1rem; color: var(--muted); flex-wrap: wrap; justify-content: center; }
-.lightbox__title { font-family: var(--font-body); font-style: italic; color: var(--ink); font-size: 1.1rem; }
-.lightbox__count { font-family: var(--font-display); font-size: 0.85rem; letter-spacing: 0.08em; }
+/* The lightbox is always a dark modal, so its text is fixed-light in BOTH
+   themes (theme tokens would turn dark and vanish here in light mode). */
+.lightbox__cap { display: flex; align-items: center; gap: 1rem; color: oklch(0.84 0.016 75); flex-wrap: wrap; justify-content: center; }
+.lightbox__title { font-family: var(--font-body); font-style: italic; color: oklch(0.97 0.012 80); font-size: 1.15rem; }
+.lightbox__count { font-family: var(--font-display); font-size: 0.85rem; letter-spacing: 0.08em; color: oklch(0.8 0.015 75); }
 .lightbox__buy {
   font-family: var(--font-display); font-weight: 600; font-size: 0.9rem;
   color: var(--bg-deep); background: var(--accent); text-decoration: none;
@@ -483,9 +485,9 @@ body.reel-focus .dim-overlay { opacity: 1; }
 .lightbox__buy:hover { background: var(--accent-strong); transform: translateY(-1px); }
 .lightbox__buy:active { transform: translateY(0); }
 .lightbox__buy.is-in-cart {
-  color: var(--accent);
+  color: oklch(0.82 0.14 66);
   background: transparent;
-  border-color: var(--line-hi);
+  border-color: oklch(1 0 0 / 0.25);
 }
 .lightbox__buy.is-in-cart:hover {
   border-color: var(--accent);
@@ -496,16 +498,16 @@ body.reel-focus .dim-overlay { opacity: 1; }
   font-family: var(--font-display);
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--accent);
+  color: oklch(0.82 0.14 66);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 .lightbox__cart-link:hover {
-  color: var(--ink);
+  color: oklch(0.97 0.012 80);
 }
 .lightbox__status {
   flex-basis: 100%; text-align: center; font-family: var(--font-display);
-  font-size: 0.9rem; color: var(--accent); min-height: 1.2em;
+  font-size: 0.9rem; color: oklch(0.82 0.14 66); min-height: 1.2em;
 }
 .lightbox__status:empty { display: none; }
 
