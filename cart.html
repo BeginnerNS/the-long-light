@@ -81,17 +81,29 @@
               Add more frames
             </a>
             <p class="cart-summary__status" id="cart-status" role="status" aria-live="polite"></p>
-            <div class="cart-invoice" id="cart-invoice" hidden>
-              <span class="cart-invoice__label">Invoice</span>
-              <button class="cart-invoice__btn" id="invoice-view" type="button" aria-label="View invoice">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
-              </button>
-              <button class="cart-invoice__btn" id="invoice-download" type="button" aria-label="Download invoice">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
-              </button>
-            </div>
             <button class="cart-clear" id="cart-clear" type="button">Clear cart</button>
           </div>
+        </div>
+
+        <!-- Order complete (shown after a verified payment) -->
+        <div class="cart-done" id="cart-done" hidden>
+          <span class="cart-done__slug">ORDER COMPLETE &middot; THANK YOU</span>
+          <h2 class="cart-done__title">Payment received</h2>
+          <p class="cart-done__note">Your ZIP should be downloading now &mdash; full-resolution, watermark-free, personal-use license. Didn&rsquo;t start automatically? Use the button below.</p>
+          <a class="btn btn--solid cart-done__download" id="cart-done-download" href="#" download="the-long-light-downloads.zip">Download your frames</a>
+          <div class="cart-invoice" id="cart-invoice" hidden>
+            <span class="cart-invoice__label">Invoice</span>
+            <button class="cart-invoice__btn" id="invoice-view" type="button" aria-label="View invoice">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+            <button class="cart-invoice__btn" id="invoice-download" type="button" aria-label="Download invoice">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+            </button>
+          </div>
+          <a class="cart-shop-more" href="index.html#work">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M12 5l-7 7 7 7"/></svg>
+            Back to the reel
+          </a>
         </div>
       </div>
     </section>
@@ -368,14 +380,17 @@
                     var hasInvoice = makeInvoice(invItems, resp);
 
                     TLLCart.clear();
-                    renderCart();
-                    statusEl.innerHTML = "";
-                    statusEl.appendChild(document.createTextNode("Payment verified — your ZIP is downloading. "));
-                    var link = document.createElement("a");
-                    link.href = dl; link.textContent = "Download again"; link.style.color = "var(--accent)";
-                    statusEl.appendChild(link);
-                    summaryEl.hidden = false; /* keep visible so status shows */
+                    renderCart(); /* empties the grid + nav pill */
+                    setStatus("");
                     emptyEl.hidden = true;
+                    summaryEl.hidden = true;
+                    var doneEl = document.getElementById("cart-done");
+                    var doneLink = document.getElementById("cart-done-download");
+                    if (doneLink) doneLink.href = dl;
+                    if (doneEl) {
+                      doneEl.hidden = false;
+                      doneEl.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
                     if (invoiceEl) invoiceEl.hidden = !hasInvoice;
                   } else {
                     setStatus("Payment received but could not be verified. Email " + ENQUIRY_EMAIL + " with payment id: " + resp.razorpay_payment_id, true);

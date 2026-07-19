@@ -223,6 +223,29 @@
 }
 .cart-shop-more:hover { color: var(--accent); gap: 0.6rem; }
 
+/* --- Order complete (post-payment, spans both columns) --------------------- */
+.cart-done {
+  grid-column: 1 / -1;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: clamp(2.5rem, 8vh, 5rem) 0 1.5rem;
+}
+.cart-done__slug {
+  font-family: var(--font-edge); font-size: 0.68rem; letter-spacing: 0.26em;
+  color: var(--accent); margin-bottom: 1.1rem;
+}
+.cart-done__title {
+  font-family: var(--font-title); font-weight: 400;
+  font-size: clamp(2.4rem, 6vw, 3.8rem); line-height: 1.0;
+  letter-spacing: 0.005em; color: var(--ink); text-wrap: balance;
+}
+.cart-done__note {
+  font-family: var(--font-body); color: var(--muted); line-height: 1.6;
+  max-width: 46ch; margin: 1.2rem auto 2.2rem; text-wrap: pretty;
+}
+.cart-done__download { font-size: 1.05rem; }
+.cart-done .cart-invoice { margin-top: 2.2rem; }
+.cart-done .cart-shop-more { margin-top: 2.4rem; }
+
 /* --- Invoice (icon-only view + download) ---------------------------------- */
 .cart-invoice {
   display: flex; align-items: center; justify-content: center; gap: 0.55rem;

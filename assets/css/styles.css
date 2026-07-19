@@ -104,8 +104,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
 }
 .nav__mark {
-  font-family: var(--font-display); font-weight: 600; font-size: 1.15rem;
-  letter-spacing: -0.01em; text-decoration: none; color: var(--ink);
+  font-family: var(--font-title); font-weight: 400; font-size: 1.4rem;
+  letter-spacing: 0.01em; text-decoration: none; color: var(--ink);
 }
 .nav__links { display: flex; align-items: center; gap: clamp(1rem, 3vw, 2.25rem); }
 .nav__links a {
@@ -457,7 +457,7 @@ body.reel-focus .dim-overlay { opacity: 1; }
   display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 1rem;
   max-width: var(--wrap); margin-inline: auto;
 }
-.foot__mark { font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; }
+.foot__mark { font-family: var(--font-title); font-weight: 400; font-size: 1.3rem; }
 .foot__meta { color: var(--muted); font-size: 0.9rem; }
 
 /* --- Lightbox ------------------------------------------------------------- */
