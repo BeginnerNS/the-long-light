@@ -30,10 +30,10 @@
   --z-lightbox: 300;
 }
 
-/* Self-hosted display face — hero wordmark only. Subset to "The Long Light". */
+/* Self-hosted display face for the wordmark + page titles. Subset to ASCII. */
 @font-face {
   font-family: "Foglihten No07";
-  src: url("../fonts/foglihten-longlight.woff2") format("woff2");
+  src: url("../fonts/foglihten-display.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;

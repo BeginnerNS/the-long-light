@@ -30,18 +30,17 @@
 /* --- Header --------------------------------------------------------------- */
 .cart-page__header {
   grid-column: 1 / -1;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 1.75rem;
+  padding-bottom: clamp(2rem, 5vh, 3rem);
 }
 .cart-page__slug {
   font-family: var(--font-edge); font-size: 0.68rem;
   letter-spacing: 0.26em; color: var(--accent);
-  display: block; margin-bottom: 0.85rem;
+  display: block; margin-bottom: 1rem;
 }
 .cart-page__title {
-  font-family: var(--font-display);
-  font-size: clamp(2.4rem, 5vw, 3.6rem); font-weight: 700;
-  line-height: 1.0; letter-spacing: -0.03em; color: var(--ink);
+  font-family: var(--font-title);
+  font-size: clamp(2.6rem, 6vw, 4.2rem); font-weight: 400;
+  line-height: 1.0; letter-spacing: 0.005em; color: var(--ink);
   margin-bottom: 0.7rem; text-wrap: balance;
 }
 .cart-page__lead {

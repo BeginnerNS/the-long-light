@@ -16,7 +16,6 @@
   "author": "Nisargi Shah",
   "license": "UNLICENSED",
   "dependencies": {
-    "archiver": "^8.0.0",
     "razorpay": "^2.9.6"
   },
   "devDependencies": {
