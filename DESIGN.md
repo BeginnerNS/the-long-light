@@ -18,11 +18,13 @@ Authored in OKLCH.
 Strategy: **Committed dark** — a single warm accent carries identity against a disciplined near-black. Text on the amber CTA is near-black (`--bg-deep`), the conventional readable pairing for a yellow-amber fill.
 
 ## Typography
-Contrast-axis pairing (grotesque display + literary serif), both chosen for warmth and character over reflex.
+Three voices on clear contrast axes, all distinctive (no Inter/Roboto/system defaults).
 
-- Display / headings / nav: **Bricolage Grotesque** (500–700). Contemporary grotesque with a hand-adjusted warmth; cinematic at large sizes.
-- Body / story / captions: **Spectral** (400, 400 italic). A warm literary serif that carries the first-person, human voice.
-- Fluid scale via `clamp()`, ratio ≥ 1.25. Display heading max ≤ 6rem. Light-on-dark line-height nudged up ~0.05.
+- Hero wordmark: **Foglihten No07** (`--font-title`, 400). An engraved didone, self-hosted and subset to "The Long Light" only. Reserved for the hero — a gallery-plaque signature.
+- Section headings / nav / UI / labels / buttons: **Schibsted Grotesk** (`--font-display`, 400–700). A crafted editorial grotesque; crisp and quiet so the interface recedes and the images lead.
+- Body / story / tagline / captions: **Literata** (`--font-body`, 400/500 + 400 italic). A warm literary serif carrying the first-person, human voice; italic for taglines and ledes.
+- Film-edge micro-labels: a system monospace (`--font-edge`) — thematic film-rebate codes only, not body text.
+- Fluid `clamp()` for display (hero ≤ 6rem, section ≤ 4rem); fixed rem for body (1–1.125rem). Rendered scale runs 61 → 38 → 19 → 12px. Light-on-dark line-height nudged up ~0.05.
 
 ## Components
 - Fixed top nav, transparent over the hero, condensing to a `--surface` bar with a hairline once scrolled.

@@ -190,7 +190,7 @@
 /* --- Bundle deal callout -------------------------------------------------- */
 .cart-deal {
   display: flex; align-items: center; gap: 0.7rem;
-  padding: 0.7rem 0.8rem; border-radius: 10px;
+  padding: 0.8rem 0.9rem; border-radius: var(--radius);
   background: color-mix(in oklab, var(--accent) 13%, transparent);
   border: 1px solid color-mix(in oklab, var(--accent) 34%, var(--line));
 }
@@ -199,7 +199,7 @@
   font-family: var(--font-edge); font-size: 0.58rem; letter-spacing: 0.1em;
   text-transform: uppercase; font-weight: 500;
   background: var(--accent); color: var(--bg-deep);
-  padding: 0.3rem 0.55rem; border-radius: 999px;
+  padding: 0.3rem 0.55rem; border-radius: var(--radius);
 }
 .cart-deal__text {
   font-family: var(--font-body); font-size: 0.98rem; line-height: 1.4; color: var(--ink);
