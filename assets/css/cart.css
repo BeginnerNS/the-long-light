@@ -32,11 +32,6 @@
   grid-column: 1 / -1;
   padding-bottom: clamp(1.25rem, 3vh, 2rem);
 }
-.cart-page__slug {
-  font-family: var(--font-edge); font-size: 0.68rem;
-  letter-spacing: 0.26em; color: var(--accent);
-  display: block; margin-bottom: 1rem;
-}
 .cart-page__title {
   font-family: var(--font-title);
   font-size: clamp(2.2rem, 4.5vw, 3.2rem); font-weight: 400;
