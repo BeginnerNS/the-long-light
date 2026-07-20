@@ -141,12 +141,6 @@
   box-shadow: 0 12px 44px oklch(0 0 0 / 0.35);
   display: flex; flex-direction: column; gap: 1.25rem;
 }
-.cart-summary__inner::before {
-  content: "THE LONG LIGHT \00B7 PRINT LAB";
-  font-family: var(--font-edge); font-size: 0.64rem; letter-spacing: 0.22em;
-  color: var(--accent);
-  padding-bottom: 1rem; border-bottom: 1px dashed var(--line-hi);
-}
 .cart-summary__line {
   display: flex; justify-content: space-between; align-items: baseline;
   padding-bottom: 1.1rem; border-bottom: 1px dashed var(--line-hi);
