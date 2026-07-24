@@ -34,8 +34,8 @@
 }
 .cart-page__title {
   font-family: var(--font-heading);
-  font-size: clamp(2.4rem, 5vw, 3.6rem); font-weight: 400;
-  line-height: 1.02; letter-spacing: 0; color: var(--ink);
+  font-size: clamp(2.4rem, 5vw, 3.6rem); font-weight: 600;
+  line-height: 1.02; letter-spacing: -0.01em; color: var(--ink);
   margin-bottom: 0.7rem; text-wrap: balance;
 }
 .cart-page__lead {

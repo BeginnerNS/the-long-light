@@ -17,7 +17,7 @@
 
   --font-display: "Vollkorn", ui-serif, Georgia, serif;
   --font-body: "Vollkorn", ui-serif, Georgia, serif;
-  --font-heading: "Marcellus", Georgia, serif;
+  --font-heading: "Vollkorn", ui-serif, Georgia, serif;
   --font-title: "Foglihten No07", Georgia, serif;
 
   --wrap: 1320px;
@@ -72,7 +72,7 @@ img { display: block; max-width: 100%; height: auto; }
 }
 a { color: inherit; }
 
-h1, h2, h3 { font-family: var(--font-heading); font-weight: 400; line-height: 1.06; letter-spacing: 0; text-wrap: balance; }
+h1, h2, h3 { font-family: var(--font-heading); font-weight: 600; line-height: 1.08; letter-spacing: -0.01em; text-wrap: balance; }
 
 ::selection { background: var(--accent); color: var(--bg-deep); }
 
@@ -225,6 +225,45 @@ h1, h2, h3 { font-family: var(--font-heading); font-weight: 400; line-height: 1.
 .filter:hover { color: var(--ink); }
 .filter.is-active { color: var(--ink); }
 .filter.is-active::after { transform: scaleX(1); }
+
+/* --- Reel controls: pause/play + reel/grid view --------------------------- */
+.reel-controls {
+  max-width: var(--wrap); margin: 1.25rem auto 0; padding-inline: var(--pad);
+  display: flex; justify-content: center; gap: 1.9rem;
+}
+.reel-ctl {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  background: none; border: 0; padding: 0.3rem 0.1rem; cursor: pointer;
+  font-family: var(--font-display); font-size: 0.88rem; letter-spacing: 0.01em;
+  color: var(--muted); transition: color 0.25s var(--ease-out);
+}
+.reel-ctl:hover { color: var(--ink); }
+.reel-ctl:disabled { opacity: 0.35; cursor: default; pointer-events: none; }
+.reel-ctl svg { display: block; }
+.reel-ctl__playicon, .reel-ctl__reelicon { display: none; }
+.reel-ctl--play.is-paused .reel-ctl__pause { display: none; }
+.reel-ctl--play.is-paused .reel-ctl__playicon { display: block; }
+.reel-ctl--view.is-grid .reel-ctl__gridicon { display: none; }
+.reel-ctl--view.is-grid .reel-ctl__reelicon { display: block; }
+
+/* --- Grid view: the reel unrolls into a scannable gallery ----------------- */
+.light-table.is-grid .reel-nav,
+.light-table.is-grid .loupe { display: none; }
+.light-table.is-grid .gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(clamp(150px, 22vw, 220px), 1fr));
+  gap: clamp(0.5rem, 1.4vw, 0.9rem);
+  overflow: visible; background-image: none; box-shadow: none;
+  padding: clamp(1.5rem, 4vw, 3rem) var(--pad);
+  cursor: auto;
+}
+.light-table.is-grid .gallery::before,
+.light-table.is-grid .gallery::after,
+.light-table.is-grid .shot::before { display: none; }
+.light-table.is-grid .shot { margin: 0; }
+.light-table.is-grid .shot--clone { display: none; }
+.light-table.is-grid .shot__btn { width: 100%; cursor: zoom-in; }
+.light-table.is-grid .shot__btn img { width: 100%; height: auto; aspect-ratio: 3 / 4; }
 
 /* --- Gallery (the contact reel) -------------------------------------------
    One continuous 35mm strip: perforated edges, amber edge-printing between
@@ -631,7 +670,8 @@ body.reel-focus .dim-overlay { opacity: 1; }
 .grain {
   position: fixed; inset: 0; z-index: var(--z-grain); pointer-events: none;
   opacity: 0.05; mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image: url("../img/grain.png");
+  background-repeat: repeat; background-size: 90px 90px;
 }
 
 /* --- Reduced motion ------------------------------------------------------- */

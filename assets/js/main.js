@@ -277,12 +277,12 @@
   if (gallery) {
     rebuildClones();
 
-    var reelPaused = false, reelPos = null, lastTick = null;
+    var reelPaused = false, userPaused = false, gridMode = false, reelPos = null, lastTick = null;
     function reelTick(t) {
       if (lastTick === null) lastTick = t;
       var dt = Math.min((t - lastTick) / 1000, 0.1);
       lastTick = t;
-      if (reelPaused || document.hidden || !lb.hidden) {
+      if (reelPaused || userPaused || gridMode || document.hidden || !lb.hidden) {
         reelPos = gallery.scrollLeft;
       } else {
         if (reelPos === null) reelPos = gallery.scrollLeft;
@@ -321,6 +321,45 @@
     }
     if (reelPrev) reelPrev.addEventListener("click", function () { reelStep(-1); });
     if (reelNext) reelNext.addEventListener("click", function () { reelStep(1); });
+
+    /* --- Reel controls: pause/play + reel/grid view -------------------------- */
+    var lightTable = document.getElementById("light-table");
+    var playBtn = document.getElementById("reel-play");
+    var viewBtn = document.getElementById("reel-view");
+
+    function setPlaying(playing) {
+      userPaused = !playing;
+      if (!playing) reelPos = gallery.scrollLeft;
+      if (playBtn) {
+        playBtn.setAttribute("aria-pressed", playing ? "true" : "false");
+        playBtn.classList.toggle("is-paused", !playing);
+        var pl = playBtn.querySelector(".reel-ctl__label");
+        if (pl) pl.textContent = playing ? "Pause" : "Play";
+      }
+    }
+    if (playBtn) playBtn.addEventListener("click", function () { setPlaying(userPaused); });
+
+    function setGrid(on) {
+      gridMode = on;
+      if (lightTable) lightTable.classList.toggle("is-grid", on);
+      if (on) { gallery.scrollLeft = 0; reelPos = 0; }
+      else { reelPos = gallery.scrollLeft; }
+      if (viewBtn) {
+        viewBtn.setAttribute("aria-pressed", on ? "true" : "false");
+        viewBtn.classList.toggle("is-grid", on);
+        var vl = viewBtn.querySelector(".reel-ctl__label");
+        if (vl) vl.textContent = on ? "Reel" : "Grid";
+      }
+      if (playBtn) playBtn.disabled = on; /* pause/play is meaningless in grid */
+      try { localStorage.setItem("tll_view", on ? "grid" : "reel"); } catch (e) {}
+    }
+    if (viewBtn) viewBtn.addEventListener("click", function () { setGrid(!gridMode); });
+
+    /* restore the visitor's last view; reduced-motion defaults to grid (calm) */
+    try {
+      var savedView = localStorage.getItem("tll_view");
+      if (savedView === "grid" || (savedView === null && reduceMotion)) setGrid(true);
+    } catch (e) {}
   }
 
   /* --- Focus mode + camera-lens cursor ------------------------------------

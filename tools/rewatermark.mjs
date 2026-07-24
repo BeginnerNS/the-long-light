@@ -13,9 +13,10 @@ const IMG = path.join(ROOT, "assets", "img");
 const MAX_EDGE = 1800;
 
 const WATERMARK = "The Long Light";
-/* smaller + lower opacity than before: big mark ~w/18 at 0.09, corner ~w/55 at 0.34 */
-const BIG_DIV = 18, BIG_WHITE = 0.09, BIG_SHADOW = 0.05;
-const SMALL_DIV = 55, SMALL_WHITE = 0.34, SMALL_SHADOW = 0.18;
+/* Corner mark only — the big diagonal mark across the art was removed so the
+   photographs read clean (theft protection lives in the encrypted originals +
+   right-click/drag blocking, not in defacing the previews). */
+const SMALL_DIV = 58, SMALL_WHITE = 0.30, SMALL_SHADOW = 0.16;
 
 /* original IMG id -> site filename slug */
 const SLUG = {
@@ -47,15 +48,10 @@ const EXPORT = {
 };
 
 function watermarkSvg(w, h) {
-  const big = Math.round(w / BIG_DIV);
   const small = Math.round(w / SMALL_DIV);
   const T = WATERMARK;
   return Buffer.from(
     `<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg">` +
-      `<g transform="translate(${w / 2},${h / 2}) rotate(-30)">` +
-      `<text x="2" y="3" text-anchor="middle" dominant-baseline="middle" font-family="Georgia, serif" font-style="italic" font-size="${big}" fill="black" fill-opacity="${BIG_SHADOW}">${T}</text>` +
-      `<text x="0" y="0" text-anchor="middle" dominant-baseline="middle" font-family="Georgia, serif" font-style="italic" font-size="${big}" fill="white" fill-opacity="${BIG_WHITE}">${T}</text>` +
-      `</g>` +
       `<text x="${w - 14}" y="${h - 12}" text-anchor="end" font-family="Georgia, serif" font-size="${small}" fill="black" fill-opacity="${SMALL_SHADOW}" dx="1" dy="1">${T}</text>` +
       `<text x="${w - 14}" y="${h - 12}" text-anchor="end" font-family="Georgia, serif" font-size="${small}" fill="white" fill-opacity="${SMALL_WHITE}">${T}</text>` +
       `</svg>`
