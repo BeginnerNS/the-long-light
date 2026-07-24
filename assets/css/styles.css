@@ -3,19 +3,21 @@
    ========================================================================== */
 
 :root {
-  --bg: oklch(0.14 0.010 60);
-  --bg-deep: oklch(0.10 0.008 60);
-  --surface: oklch(0.18 0.012 58);
-  --surface-hi: oklch(0.22 0.014 58);
-  --ink: oklch(0.95 0.010 75);
-  --muted: oklch(0.74 0.014 70);
-  --accent: oklch(0.74 0.150 62);
-  --accent-strong: oklch(0.66 0.160 48);
-  --line: oklch(1 0 0 / 0.10);
-  --line-hi: oklch(1 0 0 / 0.20);
+  /* Warm vintage darkroom — deep sepia-brown, not black */
+  --bg: oklch(0.185 0.024 58);
+  --bg-deep: oklch(0.145 0.020 55);
+  --surface: oklch(0.235 0.026 56);
+  --surface-hi: oklch(0.285 0.028 58);
+  --ink: oklch(0.945 0.018 78);
+  --muted: oklch(0.745 0.028 68);
+  --accent: oklch(0.745 0.140 64);
+  --accent-strong: oklch(0.66 0.150 50);
+  --line: oklch(0.92 0.03 75 / 0.12);
+  --line-hi: oklch(0.92 0.03 75 / 0.22);
 
-  --font-display: "Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Literata", ui-serif, Georgia, serif;
+  --font-display: "Vollkorn", ui-serif, Georgia, serif;
+  --font-body: "Vollkorn", ui-serif, Georgia, serif;
+  --font-heading: "Marcellus", Georgia, serif;
   --font-title: "Foglihten No07", Georgia, serif;
 
   --wrap: 1320px;
@@ -70,7 +72,7 @@ img { display: block; max-width: 100%; height: auto; }
 }
 a { color: inherit; }
 
-h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.04; letter-spacing: -0.02em; text-wrap: balance; }
+h1, h2, h3 { font-family: var(--font-heading); font-weight: 400; line-height: 1.06; letter-spacing: 0; text-wrap: balance; }
 
 ::selection { background: var(--accent); color: var(--bg-deep); }
 
@@ -100,6 +102,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   border-bottom-color: var(--line);
 }
 .nav__inner {
+  position: relative;
   max-width: var(--wrap); margin-inline: auto; padding: clamp(0.9rem, 2vw, 1.4rem) var(--pad);
   display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
 }
@@ -108,6 +111,13 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   letter-spacing: 0.01em; text-decoration: none; color: var(--ink);
 }
 .nav__links { display: flex; align-items: center; gap: clamp(1rem, 3vw, 2.25rem); }
+.nav__menu { display: flex; align-items: center; gap: clamp(1rem, 3vw, 2.25rem); }
+.nav__actions { display: flex; align-items: center; gap: clamp(0.75rem, 2vw, 1.1rem); }
+.nav__burger {
+  display: none; width: 40px; height: 40px; place-items: center;
+  background: none; border: 0; color: inherit; cursor: pointer; padding: 0;
+}
+.nav__burger svg { display: block; }
 .nav__links a {
   font-family: var(--font-display); font-size: 0.95rem; font-weight: 500;
   text-decoration: none; color: var(--muted); transition: color 0.25s var(--ease-out);
@@ -118,7 +128,31 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   transition: color 0.25s var(--ease-out);
 }
 .nav__links a.nav__cta:hover { color: var(--accent-strong); }
-@media (max-width: 560px) { .nav__links a:not(.nav__cta) { display: none; } }
+/* Mobile: Work/About/Prints collapse into a burger-toggled panel; the
+   theme toggle + cart pill stay in the bar so they're always reachable. */
+@media (max-width: 680px) {
+  .nav__burger { display: grid; }
+  .nav__menu {
+    position: absolute; top: calc(100% + 0.4rem); right: var(--pad);
+    flex-direction: column; align-items: flex-end; gap: 1.1rem;
+    padding: 1.25rem 1.5rem; min-width: 10rem;
+    background: color-mix(in oklab, var(--bg-deep) 94%, transparent);
+    backdrop-filter: blur(16px) saturate(1.1);
+    border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: 0 18px 50px oklch(0 0 0 / 0.5);
+    opacity: 0; visibility: hidden; transform: translateY(-8px);
+    transition: opacity 0.28s var(--ease-out), transform 0.28s var(--ease-out), visibility 0s linear 0.28s;
+  }
+  .nav__menu.is-open {
+    opacity: 1; visibility: visible; transform: none;
+    transition: opacity 0.28s var(--ease-out), transform 0.28s var(--ease-out);
+  }
+  /* inside the panel the links read on the panel surface, not over the hero */
+  .nav__menu a,
+  [data-theme="light"] body.has-hero .nav:not(.is-scrolled) .nav__menu a { color: var(--muted); }
+  .nav__menu a:hover { color: var(--ink); }
+  .nav__links a.nav__cta { color: var(--accent); }
+}
 
 /* --- Hero ----------------------------------------------------------------- */
 .hero { position: relative; min-height: 100svh; display: grid; align-items: end; isolation: isolate; }
@@ -169,7 +203,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 
 /* --- Section shell -------------------------------------------------------- */
 .section-head { max-width: var(--wrap); margin-inline: auto; padding: clamp(4.5rem, 12vh, 8.5rem) var(--pad) 0; }
-.section-head__title { font-size: clamp(2.4rem, 6vw, 4rem); letter-spacing: -0.025em; }
+.section-head__title { font-size: clamp(2.4rem, 6vw, 4rem); letter-spacing: 0; }
 .section-head__lead { color: var(--muted); max-width: 60ch; margin-top: 1.25rem; font-size: 1.15rem; line-height: 1.6; text-wrap: pretty; }
 
 /* --- Filters -------------------------------------------------------------- */
@@ -669,7 +703,8 @@ body.reel-focus .dim-overlay { opacity: 1; }
 /* Nav over the hero photo (index only, before scroll) needs light text */
 [data-theme="light"] body.has-hero .nav:not(.is-scrolled) .nav__mark,
 [data-theme="light"] body.has-hero .nav:not(.is-scrolled) .nav__links a,
-[data-theme="light"] body.has-hero .nav:not(.is-scrolled) .theme-toggle {
+[data-theme="light"] body.has-hero .nav:not(.is-scrolled) .theme-toggle,
+[data-theme="light"] body.has-hero .nav:not(.is-scrolled) .nav__burger {
   color: oklch(0.95 0.010 80);
 }
 [data-theme="light"] body.has-hero .nav:not(.is-scrolled) .theme-toggle { border-color: oklch(0.95 0.01 80 / 0.35); }
