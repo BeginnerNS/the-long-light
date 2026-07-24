@@ -286,7 +286,7 @@
         reelPos = gallery.scrollLeft;
       } else {
         if (reelPos === null) reelPos = gallery.scrollLeft;
-        reelPos += 26 * dt; /* px per second */
+        reelPos += 36 * dt; /* px per second */
         if (loopWidth > 0 && reelPos >= loopStart + loopWidth) reelPos -= loopWidth;
         gallery.scrollLeft = reelPos;
       }
