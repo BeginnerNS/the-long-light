@@ -706,19 +706,19 @@ body.reel-focus .dim-overlay { opacity: 1; }
 [data-theme="light"] .theme-toggle__sun { display: block; }
 
 [data-theme="light"] {
-  /* Blue hour, light: cool pale bone / porcelain surfaces with a deep warm
-     terracotta accent. Cool and quiet base, warm human focus. */
-  --bg: oklch(0.940 0.006 264);
-  --bg-deep: oklch(0.908 0.009 258);
-  --surface: oklch(0.976 0.003 264);
-  --surface-hi: oklch(0.994 0.002 286);
-  --ink: oklch(0.271 0.025 258);
-  --muted: oklch(0.487 0.032 262);
-  --accent: oklch(0.470 0.120 50);        /* deep warm terracotta on cool bone */
+  /* Light: warm ivory paper (a subtle fibre texture is layered on via .grain)
+     with the deep terracotta accent. Warm, tactile, darkroom-print paper. */
+  --bg: oklch(0.928 0.014 82);
+  --bg-deep: oklch(0.898 0.018 78);
+  --surface: oklch(0.966 0.010 84);
+  --surface-hi: oklch(0.990 0.006 86);
+  --ink: oklch(0.268 0.022 60);
+  --muted: oklch(0.478 0.030 62);
+  --accent: oklch(0.470 0.120 50);        /* deep warm terracotta */
   --accent-strong: oklch(0.410 0.120 46);
-  --on-accent: oklch(0.976 0.003 264); /* light label on the deep terracotta fill */
-  --line: oklch(0.30 0.03 258 / 0.16);
-  --line-hi: oklch(0.30 0.03 258 / 0.30);
+  --on-accent: oklch(0.982 0.006 84); /* warm near-white label on the terracotta fill */
+  --line: oklch(0.32 0.03 62 / 0.16);
+  --line-hi: oklch(0.32 0.03 62 / 0.30);
   /* --edge-print stays at its dark-theme value: edge codes always sit on the
      dark film base, so they read light-slate in both themes. Slate text on the
      paper surfaces (cart receipt) uses --accent instead. */
@@ -734,7 +734,13 @@ body.reel-focus .dim-overlay { opacity: 1; }
     radial-gradient(120% 80% at 50% -10%, oklch(0.90 0.02 258), transparent 60%),
     var(--bg-deep);
 }
-[data-theme="light"] .grain { opacity: 0.035; mix-blend-mode: multiply; }
+/* Light mode swaps the film grain for a warm paper-fibre texture over the
+   whole page, giving the ivory surfaces a tactile, printed-paper feel. */
+[data-theme="light"] .grain {
+  background-image: url("../img/paper.png");
+  background-size: 240px 240px; background-repeat: repeat;
+  opacity: 0.75; mix-blend-mode: multiply;
+}
 
 /* Hero text sits over a photograph, so keep it light in BOTH themes */
 [data-theme="light"] .hero__title,
