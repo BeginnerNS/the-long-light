@@ -4,19 +4,19 @@
    ========================================================================== */
 
 :root {
-  /* Vintage warm dark — deep charcoal-brown surfaces, warm ember accent,
-     sepia film reel. Warm and cinematic, like a dim darkroom. */
-  --bg: oklch(0.190 0.016 64);
-  --bg-deep: oklch(0.158 0.014 60);
-  --surface: oklch(0.238 0.019 62);
-  --surface-hi: oklch(0.286 0.021 64);
-  --ink: oklch(0.948 0.013 80);
-  --muted: oklch(0.722 0.024 68);
+  /* Near-black with just a hint of warmth — dim darkroom, not brown. The
+     warmth lives in the ember accent and the sepia film reel, not the walls. */
+  --bg: oklch(0.168 0.006 66);
+  --bg-deep: oklch(0.138 0.006 62);
+  --surface: oklch(0.212 0.008 64);
+  --surface-hi: oklch(0.258 0.010 64);
+  --ink: oklch(0.950 0.008 82);
+  --muted: oklch(0.720 0.016 70);
   --accent: oklch(0.735 0.110 62);        /* warm ember — the last light */
   --accent-strong: oklch(0.640 0.125 54);
-  --on-accent: oklch(0.180 0.016 60); /* deep warm label on the ember fill (dark theme) */
-  --line: oklch(0.90 0.02 72 / 0.13);
-  --line-hi: oklch(0.90 0.02 72 / 0.24);
+  --on-accent: oklch(0.165 0.008 62); /* near-black label on the ember fill (dark theme) */
+  --line: oklch(0.92 0.012 70 / 0.12);
+  --line-hi: oklch(0.92 0.012 70 / 0.22);
 
   --font-display: "Vollkorn", ui-serif, Georgia, serif;
   --font-body: "Vollkorn", ui-serif, Georgia, serif;
@@ -273,8 +273,8 @@ h1, h2, h3 { font-family: var(--font-heading); font-weight: 600; line-height: 1.
    frames (CSS counters — no markup needed), and a light-table loupe that
    follows the cursor (JS, desktop only). --------------------------------- */
 :root {
-  --film-strip: oklch(0.205 0.022 64);   /* warm sepia film base — vintage */
-  --film-hole: oklch(0.135 0.016 58);
+  --film-strip: oklch(0.180 0.012 62);   /* near-black film base, faint warmth */
+  --film-hole: oklch(0.120 0.008 58);
   --edge-print: oklch(0.740 0.100 62 / 0.85);
   --font-edge: ui-monospace, "Cascadia Mono", Consolas, "Courier New", monospace;
 }
@@ -285,9 +285,9 @@ h1, h2, h3 { font-family: var(--font-heading); font-weight: 600; line-height: 1.
   margin-top: 2.25rem;
   padding: clamp(2.2rem, 6vh, 3.6rem) 0;
   background: radial-gradient(85% 120% at 50% 50%,
-    oklch(0.44 0.055 72 / 0.9),
-    oklch(0.30 0.04 66 / 0.7) 55%,
-    oklch(0.195 0.016 60) 100%);
+    oklch(0.34 0.030 68 / 0.85),
+    oklch(0.25 0.020 64 / 0.6) 55%,
+    oklch(0.168 0.008 62) 100%);
 }
 
 /* reel navigation arrows: visible on light-table hover */
