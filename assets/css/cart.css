@@ -10,7 +10,7 @@
   min-height: 100vh;
   /* a lit light-table the film cells rest on: warm at the top, deep below */
   background:
-    radial-gradient(120% 80% at 50% -10%, oklch(0.30 0.03 258 / 0.55), transparent 60%),
+    radial-gradient(120% 80% at 50% -10%, oklch(0.32 0.04 70 / 0.55), transparent 60%),
     var(--bg-deep);
 }
 

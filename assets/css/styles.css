@@ -272,8 +272,8 @@ h1, h2, h3 { font-family: var(--font-heading); font-weight: 600; line-height: 1.
    frames (CSS counters — no markup needed), and a light-table loupe that
    follows the cursor (JS, desktop only). --------------------------------- */
 :root {
-  --film-strip: oklch(0.186 0.011 261);
-  --film-hole: oklch(0.153 0.007 258);
+  --film-strip: oklch(0.205 0.022 64);   /* warm sepia film base — vintage */
+  --film-hole: oklch(0.135 0.016 58);
   --edge-print: oklch(0.740 0.100 62 / 0.85);
   --font-edge: ui-monospace, "Cascadia Mono", Consolas, "Courier New", monospace;
 }
@@ -284,9 +284,9 @@ h1, h2, h3 { font-family: var(--font-heading); font-weight: 600; line-height: 1.
   margin-top: 2.25rem;
   padding: clamp(2.2rem, 6vh, 3.6rem) 0;
   background: radial-gradient(85% 120% at 50% 50%,
-    oklch(0.42 0.045 256 / 0.9),
-    oklch(0.28 0.03 258 / 0.7) 55%,
-    oklch(0.185 0.010 258) 100%);
+    oklch(0.44 0.055 72 / 0.9),
+    oklch(0.30 0.04 66 / 0.7) 55%,
+    oklch(0.195 0.016 60) 100%);
 }
 
 /* reel navigation arrows: visible on light-table hover */
@@ -392,7 +392,7 @@ body.reel-focus .light-table { position: relative; z-index: 160; }
 .loupe {
   position: absolute; top: 0; left: 0; width: 68px; height: 68px;
   border-radius: 50%; pointer-events: none; z-index: 6;
-  border: 2px solid oklch(0.86 0.035 256 / 0.9);
+  border: 2px solid oklch(0.86 0.045 74 / 0.9);
   box-shadow:
     0 0 0 5px oklch(0.14 0.01 258 / 0.45),
     inset 0 0 0 2px oklch(0.14 0.01 258 / 0.5),
@@ -724,14 +724,14 @@ body.reel-focus .dim-overlay { opacity: 1; }
      paper surfaces (cart receipt) uses --accent instead. */
 }
 
-/* the film strip's light table glows cool and light instead of cool and dark */
+/* the film strip's light table glows as warm aged paper in light mode */
 [data-theme="light"] .light-table {
   background: radial-gradient(85% 120% at 50% 50%,
-    oklch(0.90 0.02 258), oklch(0.85 0.025 258) 55%, oklch(0.78 0.03 258) 100%);
+    oklch(0.905 0.035 82), oklch(0.855 0.048 76) 55%, oklch(0.785 0.055 72) 100%);
 }
 [data-theme="light"] #cart-main {
   background:
-    radial-gradient(120% 80% at 50% -10%, oklch(0.90 0.02 258), transparent 60%),
+    radial-gradient(120% 80% at 50% -10%, oklch(0.905 0.035 82), transparent 60%),
     var(--bg-deep);
 }
 /* Light mode swaps the film grain for a warm paper-fibre texture over the
