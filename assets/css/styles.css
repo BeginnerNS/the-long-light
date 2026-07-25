@@ -1,20 +1,21 @@
 /* ==========================================================================
-   The Long Light — warm cinematic dark portfolio
+   The Long Light — "blue hour" cool cinematic portfolio (dark + light)
    ========================================================================== */
 
 :root {
-  /* Warm vintage darkroom — deep sepia-brown, not black */
-  --bg: oklch(0.185 0.024 58);
-  --bg-deep: oklch(0.145 0.020 55);
-  --surface: oklch(0.235 0.026 56);
-  --surface-hi: oklch(0.285 0.028 58);
-  --ink: oklch(0.945 0.018 78);
-  --muted: oklch(0.745 0.028 68);
-  --accent: oklch(0.745 0.140 64);
-  --accent-strong: oklch(0.66 0.150 50);
-  --on-accent: oklch(0.185 0.030 52); /* dark warm ink for text on the amber fill — fixed in both themes */
-  --line: oklch(0.92 0.03 75 / 0.12);
-  --line-hi: oklch(0.92 0.03 75 / 0.22);
+  /* Blue hour — cool neutral charcoal, muted dusty blue-slate accent
+     (cyanotype / twilight). Warmth comes only from the photographs. */
+  --bg: oklch(0.199 0.007 258);
+  --bg-deep: oklch(0.177 0.007 258);
+  --surface: oklch(0.248 0.014 267);
+  --surface-hi: oklch(0.285 0.018 266);
+  --ink: oklch(0.957 0.006 256);
+  --muted: oklch(0.721 0.026 254);
+  --accent: oklch(0.668 0.057 255);
+  --accent-strong: oklch(0.585 0.071 255);
+  --on-accent: oklch(0.199 0.007 258); /* dark charcoal label on the light-slate fill (dark theme) */
+  --line: oklch(0.90 0.02 256 / 0.13);
+  --line-hi: oklch(0.90 0.02 256 / 0.24);
 
   --font-display: "Vollkorn", ui-serif, Georgia, serif;
   --font-body: "Vollkorn", ui-serif, Georgia, serif;
@@ -162,8 +163,8 @@ h1, h2, h3 { font-family: var(--font-heading); font-weight: 600; line-height: 1.
 .hero__scrim {
   position: absolute; inset: 0; z-index: -1;
   background:
-    linear-gradient(180deg, oklch(0.10 0.008 60 / 0.55) 0%, transparent 26%, transparent 44%, oklch(0.10 0.008 60 / 0.72) 88%, var(--bg) 100%),
-    radial-gradient(120% 80% at 50% 120%, oklch(0.14 0.03 62 / 0.5), transparent 60%);
+    linear-gradient(180deg, oklch(0.10 0.006 258 / 0.55) 0%, transparent 26%, transparent 44%, oklch(0.10 0.006 258 / 0.72) 88%, var(--bg) 100%),
+    radial-gradient(120% 80% at 50% 120%, oklch(0.16 0.02 258 / 0.45), transparent 60%);
 }
 .hero__content {
   position: relative; max-width: var(--wrap); width: 100%; margin-inline: auto;
@@ -271,9 +272,9 @@ h1, h2, h3 { font-family: var(--font-heading); font-weight: 600; line-height: 1.
    frames (CSS counters — no markup needed), and a light-table loupe that
    follows the cursor (JS, desktop only). --------------------------------- */
 :root {
-  --film-strip: oklch(0.135 0.021 54);
-  --film-hole: oklch(0.088 0.015 52);
-  --edge-print: oklch(0.72 0.13 62 / 0.75);
+  --film-strip: oklch(0.186 0.011 261);
+  --film-hole: oklch(0.153 0.007 258);
+  --edge-print: oklch(0.717 0.048 254 / 0.85);
   --font-edge: ui-monospace, "Cascadia Mono", Consolas, "Courier New", monospace;
 }
 
@@ -283,9 +284,9 @@ h1, h2, h3 { font-family: var(--font-heading); font-weight: 600; line-height: 1.
   margin-top: 2.25rem;
   padding: clamp(2.2rem, 6vh, 3.6rem) 0;
   background: radial-gradient(85% 120% at 50% 50%,
-    oklch(0.46 0.05 78 / 0.9),
-    oklch(0.30 0.03 70 / 0.7) 55%,
-    oklch(0.16 0.012 60) 100%);
+    oklch(0.42 0.045 256 / 0.9),
+    oklch(0.28 0.03 258 / 0.7) 55%,
+    oklch(0.185 0.010 258) 100%);
 }
 
 /* reel navigation arrows: visible on light-table hover */
@@ -391,17 +392,17 @@ body.reel-focus .light-table { position: relative; z-index: 160; }
 .loupe {
   position: absolute; top: 0; left: 0; width: 68px; height: 68px;
   border-radius: 50%; pointer-events: none; z-index: 6;
-  border: 2px solid oklch(0.88 0.05 78 / 0.9);
+  border: 2px solid oklch(0.86 0.035 256 / 0.9);
   box-shadow:
-    0 0 0 5px oklch(0.12 0.01 60 / 0.45),
-    inset 0 0 0 2px oklch(0.12 0.01 60 / 0.5),
-    inset 0 0 16px oklch(0.85 0.09 75 / 0.3);
+    0 0 0 5px oklch(0.14 0.01 258 / 0.45),
+    inset 0 0 0 2px oklch(0.14 0.01 258 / 0.5),
+    inset 0 0 16px oklch(0.78 0.06 256 / 0.3);
   opacity: 0; transition: opacity 0.3s var(--ease-out);
   will-change: transform;
 }
 .loupe::before {
   content: ""; position: absolute; inset: -11px; border-radius: 50%;
-  border: 1.5px solid oklch(0.74 0.15 62 / 0.55);
+  border: 1.5px solid oklch(0.668 0.057 255 / 0.6);
 }
 .loupe::after {
   content: "";
@@ -412,14 +413,14 @@ body.reel-focus .light-table { position: relative; z-index: 160; }
   width: 14px;
   height: 14px;
   background: 
-    linear-gradient(90deg, transparent 6px, oklch(0.74 0.15 62 / 0.95) 6px, oklch(0.74 0.15 62 / 0.95) 8px, transparent 8px),
-    linear-gradient(0deg, transparent 6px, oklch(0.74 0.15 62 / 0.95) 6px, oklch(0.74 0.15 62 / 0.95) 8px, transparent 8px);
+    linear-gradient(90deg, transparent 6px, oklch(0.72 0.06 256 / 0.95) 6px, oklch(0.72 0.06 256 / 0.95) 8px, transparent 8px),
+    linear-gradient(0deg, transparent 6px, oklch(0.72 0.06 256 / 0.95) 6px, oklch(0.72 0.06 256 / 0.95) 8px, transparent 8px);
 }
 .loupe.is-on { opacity: 1; }
 .loupe.is-snap { animation: lensFlash 0.3s var(--ease-out); }
 .loupe.is-snap::before { animation: lensIris 0.3s var(--ease-out); }
 @keyframes lensFlash {
-  35% { background: oklch(0.97 0.02 85 / 0.5); }
+  35% { background: oklch(0.97 0.008 256 / 0.5); }
   100% { background: transparent; }
 }
 @keyframes lensIris {
@@ -456,10 +457,10 @@ body.reel-focus .dim-overlay { opacity: 1; }
 }
 .shot:hover .shot__cap, .shot:focus-within .shot__cap { opacity: 1; transform: none; }
 /* captions sit over the photograph — fixed light in BOTH themes */
-.shot__title { font-family: var(--font-body); font-style: italic; font-size: 1.05rem; color: oklch(0.96 0.012 78); }
+.shot__title { font-family: var(--font-body); font-style: italic; font-size: 1.05rem; color: oklch(0.96 0.008 258); }
 .shot__cat {
   font-family: var(--font-display); font-size: 0.72rem; font-weight: 500;
-  letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.80 0.13 66); white-space: nowrap;
+  letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.78 0.06 256); white-space: nowrap;
 }
 .gallery__empty { text-align: center; color: var(--muted); padding: 3rem var(--pad); font-style: italic; }
 
@@ -556,9 +557,9 @@ body.reel-focus .dim-overlay { opacity: 1; }
 .js .lightbox__img { transition: opacity 0.3s var(--ease-out); }
 /* The lightbox is always a dark modal, so its text is fixed-light in BOTH
    themes (theme tokens would turn dark and vanish here in light mode). */
-.lightbox__cap { display: flex; align-items: center; gap: 1rem; color: oklch(0.84 0.016 75); flex-wrap: wrap; justify-content: center; }
-.lightbox__title { font-family: var(--font-body); font-style: italic; color: oklch(0.97 0.012 80); font-size: 1.15rem; }
-.lightbox__count { font-family: var(--font-display); font-size: 0.85rem; letter-spacing: 0.08em; color: oklch(0.8 0.015 75); }
+.lightbox__cap { display: flex; align-items: center; gap: 1rem; color: oklch(0.84 0.012 258); flex-wrap: wrap; justify-content: center; }
+.lightbox__title { font-family: var(--font-body); font-style: italic; color: oklch(0.97 0.008 258); font-size: 1.15rem; }
+.lightbox__count { font-family: var(--font-display); font-size: 0.85rem; letter-spacing: 0.08em; color: oklch(0.8 0.012 258); }
 .lightbox__buy {
   font-family: var(--font-display); font-weight: 600; font-size: 0.9rem;
   color: var(--on-accent); background: var(--accent); text-decoration: none;
@@ -569,7 +570,7 @@ body.reel-focus .dim-overlay { opacity: 1; }
 .lightbox__buy:hover { background: var(--accent-strong); transform: translateY(-1px); }
 .lightbox__buy:active { transform: translateY(0); }
 .lightbox__buy.is-in-cart {
-  color: oklch(0.82 0.14 66);
+  color: oklch(0.75 0.06 256);
   background: transparent;
   border-color: oklch(1 0 0 / 0.25);
 }
@@ -582,16 +583,16 @@ body.reel-focus .dim-overlay { opacity: 1; }
   font-family: var(--font-display);
   font-size: 0.9rem;
   font-weight: 500;
-  color: oklch(0.82 0.14 66);
+  color: oklch(0.75 0.06 256);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 .lightbox__cart-link:hover {
-  color: oklch(0.97 0.012 80);
+  color: oklch(0.97 0.008 258);
 }
 .lightbox__status {
   flex-basis: 100%; text-align: center; font-family: var(--font-display);
-  font-size: 0.9rem; color: oklch(0.82 0.14 66); min-height: 1.2em;
+  font-size: 0.9rem; color: oklch(0.75 0.06 256); min-height: 1.2em;
 }
 .lightbox__status:empty { display: none; }
 
@@ -705,33 +706,32 @@ body.reel-focus .dim-overlay { opacity: 1; }
 [data-theme="light"] .theme-toggle__sun { display: block; }
 
 [data-theme="light"] {
-  /* Committed warm sand / darkroom paper — not the default near-white cream.
-     Chroma pushed toward the amber hue so it reads as an intentional aged
-     paper, with warmth still carried by the accent, type and imagery. */
-  --bg: oklch(0.900 0.042 74);
-  --bg-deep: oklch(0.860 0.046 70);
-  --surface: oklch(0.948 0.030 78);
-  --surface-hi: oklch(0.980 0.020 80);
-  --ink: oklch(0.250 0.032 48);
-  --muted: oklch(0.375 0.038 54);
-  --accent: oklch(0.475 0.155 46);
-  --accent-strong: oklch(0.405 0.155 42);
-  --on-accent: oklch(0.972 0.014 82); /* light label on the darker light-mode amber */
-  --line: oklch(0.30 0.04 52 / 0.17);
-  --line-hi: oklch(0.30 0.04 52 / 0.32);
-  /* --edge-print is left at its dark-theme value: edge codes always sit on the
-     dark film base, so they must stay light-amber in both themes. Amber text
-     on the paper surfaces (cart receipt) uses --accent instead. */
+  /* Blue hour, light: cool pale bone / porcelain, deeper slate-blue accent.
+     Cool and quiet so warm-toned photographs pop against it. */
+  --bg: oklch(0.940 0.006 264);
+  --bg-deep: oklch(0.908 0.009 258);
+  --surface: oklch(0.976 0.003 264);
+  --surface-hi: oklch(0.994 0.002 286);
+  --ink: oklch(0.271 0.025 258);
+  --muted: oklch(0.487 0.032 262);
+  --accent: oklch(0.482 0.059 254);
+  --accent-strong: oklch(0.425 0.059 254);
+  --on-accent: oklch(0.976 0.003 264); /* light label on the deeper light-mode slate */
+  --line: oklch(0.30 0.03 258 / 0.16);
+  --line-hi: oklch(0.30 0.03 258 / 0.30);
+  /* --edge-print stays at its dark-theme value: edge codes always sit on the
+     dark film base, so they read light-slate in both themes. Slate text on the
+     paper surfaces (cart receipt) uses --accent instead. */
 }
 
-/* the film strip's light table glows warm and light instead of warm and dark */
+/* the film strip's light table glows cool and light instead of cool and dark */
 [data-theme="light"] .light-table {
   background: radial-gradient(85% 120% at 50% 50%,
-    oklch(0.86 0.05 80), oklch(0.80 0.05 76) 55%, oklch(0.72 0.05 72) 100%);
+    oklch(0.90 0.02 258), oklch(0.85 0.025 258) 55%, oklch(0.78 0.03 258) 100%);
 }
 [data-theme="light"] #cart-main {
   background:
-    radial-gradient(120% 80% at 50% -10%, oklch(0.86 0.05 80), transparent 60%),
+    radial-gradient(120% 80% at 50% -10%, oklch(0.90 0.02 258), transparent 60%),
     var(--bg-deep);
 }
 [data-theme="light"] .grain { opacity: 0.035; mix-blend-mode: multiply; }
@@ -739,18 +739,18 @@ body.reel-focus .dim-overlay { opacity: 1; }
 /* Hero text sits over a photograph, so keep it light in BOTH themes */
 [data-theme="light"] .hero__title,
 [data-theme="light"] .hero__tagline,
-[data-theme="light"] .hero__cue { color: oklch(0.96 0.010 80); }
-[data-theme="light"] .hero__eyebrow { color: oklch(0.82 0.120 68); }
+[data-theme="light"] .hero__cue { color: oklch(0.96 0.008 258); }
+[data-theme="light"] .hero__eyebrow { color: oklch(0.80 0.07 256); }
 
 /* Nav over the hero photo (index only, before scroll) needs light text */
 [data-theme="light"] body.has-hero .nav:not(.is-scrolled) .nav__mark,
 [data-theme="light"] body.has-hero .nav:not(.is-scrolled) .nav__links a,
 [data-theme="light"] body.has-hero .nav:not(.is-scrolled) .theme-toggle,
 [data-theme="light"] body.has-hero .nav:not(.is-scrolled) .nav__burger {
-  color: oklch(0.95 0.010 80);
+  color: oklch(0.95 0.008 258);
 }
-[data-theme="light"] body.has-hero .nav:not(.is-scrolled) .theme-toggle { border-color: oklch(0.95 0.01 80 / 0.35); }
+[data-theme="light"] body.has-hero .nav:not(.is-scrolled) .theme-toggle { border-color: oklch(0.95 0.008 258 / 0.35); }
 [data-theme="light"] body.has-hero .nav:not(.is-scrolled) .nav__cta {
-  color: oklch(0.96 0.010 80); border-color: oklch(0.96 0.01 80 / 0.4);
+  color: oklch(0.96 0.008 258); border-color: oklch(0.96 0.008 258 / 0.4);
 }
 
