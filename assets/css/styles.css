@@ -1,21 +1,22 @@
 /* ==========================================================================
-   The Long Light — "blue hour" cool cinematic portfolio (dark + light)
+   The Long Light — warm vintage portfolio: dim darkroom (dark) + aged
+   paper (light), sepia film reel, ember accent.
    ========================================================================== */
 
 :root {
-  /* Blue hour — cool neutral charcoal surfaces with a warm ember accent:
-     the last warm light against the cool twilight. Cool base, warm focus. */
-  --bg: oklch(0.199 0.007 258);
-  --bg-deep: oklch(0.177 0.007 258);
-  --surface: oklch(0.248 0.014 267);
-  --surface-hi: oklch(0.285 0.018 266);
-  --ink: oklch(0.957 0.006 256);
-  --muted: oklch(0.721 0.026 254);
-  --accent: oklch(0.720 0.105 60);        /* warm ember — the last light in the blue hour */
-  --accent-strong: oklch(0.630 0.120 52);
-  --on-accent: oklch(0.199 0.007 258); /* dark charcoal label on the warm-ember fill (dark theme) */
-  --line: oklch(0.90 0.02 256 / 0.13);
-  --line-hi: oklch(0.90 0.02 256 / 0.24);
+  /* Vintage warm dark — deep charcoal-brown surfaces, warm ember accent,
+     sepia film reel. Warm and cinematic, like a dim darkroom. */
+  --bg: oklch(0.190 0.016 64);
+  --bg-deep: oklch(0.158 0.014 60);
+  --surface: oklch(0.238 0.019 62);
+  --surface-hi: oklch(0.286 0.021 64);
+  --ink: oklch(0.948 0.013 80);
+  --muted: oklch(0.722 0.024 68);
+  --accent: oklch(0.735 0.110 62);        /* warm ember — the last light */
+  --accent-strong: oklch(0.640 0.125 54);
+  --on-accent: oklch(0.180 0.016 60); /* deep warm label on the ember fill (dark theme) */
+  --line: oklch(0.90 0.02 72 / 0.13);
+  --line-hi: oklch(0.90 0.02 72 / 0.24);
 
   --font-display: "Vollkorn", ui-serif, Georgia, serif;
   --font-body: "Vollkorn", ui-serif, Georgia, serif;
@@ -163,8 +164,8 @@ h1, h2, h3 { font-family: var(--font-heading); font-weight: 600; line-height: 1.
 .hero__scrim {
   position: absolute; inset: 0; z-index: -1;
   background:
-    linear-gradient(180deg, oklch(0.10 0.006 258 / 0.55) 0%, transparent 26%, transparent 44%, oklch(0.10 0.006 258 / 0.72) 88%, var(--bg) 100%),
-    radial-gradient(120% 80% at 50% 120%, oklch(0.16 0.02 258 / 0.45), transparent 60%);
+    linear-gradient(180deg, oklch(0.10 0.006 66 / 0.55) 0%, transparent 26%, transparent 44%, oklch(0.10 0.006 66 / 0.72) 88%, var(--bg) 100%),
+    radial-gradient(120% 80% at 50% 120%, oklch(0.16 0.02 66 / 0.45), transparent 60%);
 }
 .hero__content {
   position: relative; max-width: var(--wrap); width: 100%; margin-inline: auto;
@@ -394,8 +395,8 @@ body.reel-focus .light-table { position: relative; z-index: 160; }
   border-radius: 50%; pointer-events: none; z-index: 6;
   border: 2px solid oklch(0.86 0.045 74 / 0.9);
   box-shadow:
-    0 0 0 5px oklch(0.14 0.01 258 / 0.45),
-    inset 0 0 0 2px oklch(0.14 0.01 258 / 0.5),
+    0 0 0 5px oklch(0.14 0.01 66 / 0.45),
+    inset 0 0 0 2px oklch(0.14 0.01 66 / 0.5),
     inset 0 0 16px oklch(0.78 0.09 62 / 0.3);
   opacity: 0; transition: opacity 0.3s var(--ease-out);
   will-change: transform;
@@ -420,7 +421,7 @@ body.reel-focus .light-table { position: relative; z-index: 160; }
 .loupe.is-snap { animation: lensFlash 0.3s var(--ease-out); }
 .loupe.is-snap::before { animation: lensIris 0.3s var(--ease-out); }
 @keyframes lensFlash {
-  35% { background: oklch(0.97 0.008 256 / 0.5); }
+  35% { background: oklch(0.97 0.008 66 / 0.5); }
   100% { background: transparent; }
 }
 @keyframes lensIris {
@@ -457,7 +458,7 @@ body.reel-focus .dim-overlay { opacity: 1; }
 }
 .shot:hover .shot__cap, .shot:focus-within .shot__cap { opacity: 1; transform: none; }
 /* captions sit over the photograph — fixed light in BOTH themes */
-.shot__title { font-family: var(--font-body); font-style: italic; font-size: 1.05rem; color: oklch(0.96 0.008 258); }
+.shot__title { font-family: var(--font-body); font-style: italic; font-size: 1.05rem; color: oklch(0.96 0.008 66); }
 .shot__cat {
   font-family: var(--font-display); font-size: 0.72rem; font-weight: 500;
   letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.80 0.10 66); white-space: nowrap;
@@ -557,9 +558,9 @@ body.reel-focus .dim-overlay { opacity: 1; }
 .js .lightbox__img { transition: opacity 0.3s var(--ease-out); }
 /* The lightbox is always a dark modal, so its text is fixed-light in BOTH
    themes (theme tokens would turn dark and vanish here in light mode). */
-.lightbox__cap { display: flex; align-items: center; gap: 1rem; color: oklch(0.84 0.012 258); flex-wrap: wrap; justify-content: center; }
-.lightbox__title { font-family: var(--font-body); font-style: italic; color: oklch(0.97 0.008 258); font-size: 1.15rem; }
-.lightbox__count { font-family: var(--font-display); font-size: 0.85rem; letter-spacing: 0.08em; color: oklch(0.8 0.012 258); }
+.lightbox__cap { display: flex; align-items: center; gap: 1rem; color: oklch(0.84 0.012 66); flex-wrap: wrap; justify-content: center; }
+.lightbox__title { font-family: var(--font-body); font-style: italic; color: oklch(0.97 0.008 66); font-size: 1.15rem; }
+.lightbox__count { font-family: var(--font-display); font-size: 0.85rem; letter-spacing: 0.08em; color: oklch(0.8 0.012 66); }
 .lightbox__buy {
   font-family: var(--font-display); font-weight: 600; font-size: 0.9rem;
   color: var(--on-accent); background: var(--accent); text-decoration: none;
@@ -588,7 +589,7 @@ body.reel-focus .dim-overlay { opacity: 1; }
   text-underline-offset: 3px;
 }
 .lightbox__cart-link:hover {
-  color: oklch(0.97 0.008 258);
+  color: oklch(0.97 0.008 66);
 }
 .lightbox__status {
   flex-basis: 100%; text-align: center; font-family: var(--font-display);
@@ -745,7 +746,7 @@ body.reel-focus .dim-overlay { opacity: 1; }
 /* Hero text sits over a photograph, so keep it light in BOTH themes */
 [data-theme="light"] .hero__title,
 [data-theme="light"] .hero__tagline,
-[data-theme="light"] .hero__cue { color: oklch(0.96 0.008 258); }
+[data-theme="light"] .hero__cue { color: oklch(0.96 0.008 66); }
 [data-theme="light"] .hero__eyebrow { color: oklch(0.72 0.11 58); }
 
 /* Nav over the hero photo (index only, before scroll) needs light text */
@@ -753,10 +754,10 @@ body.reel-focus .dim-overlay { opacity: 1; }
 [data-theme="light"] body.has-hero .nav:not(.is-scrolled) .nav__links a,
 [data-theme="light"] body.has-hero .nav:not(.is-scrolled) .theme-toggle,
 [data-theme="light"] body.has-hero .nav:not(.is-scrolled) .nav__burger {
-  color: oklch(0.95 0.008 258);
+  color: oklch(0.95 0.008 66);
 }
-[data-theme="light"] body.has-hero .nav:not(.is-scrolled) .theme-toggle { border-color: oklch(0.95 0.008 258 / 0.35); }
+[data-theme="light"] body.has-hero .nav:not(.is-scrolled) .theme-toggle { border-color: oklch(0.95 0.008 66 / 0.35); }
 [data-theme="light"] body.has-hero .nav:not(.is-scrolled) .nav__cta {
-  color: oklch(0.96 0.008 258); border-color: oklch(0.96 0.008 258 / 0.4);
+  color: oklch(0.96 0.008 66); border-color: oklch(0.96 0.008 66 / 0.4);
 }
 
