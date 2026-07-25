@@ -3,17 +3,17 @@
    ========================================================================== */
 
 :root {
-  /* Blue hour — cool neutral charcoal, muted dusty blue-slate accent
-     (cyanotype / twilight). Warmth comes only from the photographs. */
+  /* Blue hour — cool neutral charcoal surfaces with a warm ember accent:
+     the last warm light against the cool twilight. Cool base, warm focus. */
   --bg: oklch(0.199 0.007 258);
   --bg-deep: oklch(0.177 0.007 258);
   --surface: oklch(0.248 0.014 267);
   --surface-hi: oklch(0.285 0.018 266);
   --ink: oklch(0.957 0.006 256);
   --muted: oklch(0.721 0.026 254);
-  --accent: oklch(0.668 0.057 255);
-  --accent-strong: oklch(0.585 0.071 255);
-  --on-accent: oklch(0.199 0.007 258); /* dark charcoal label on the light-slate fill (dark theme) */
+  --accent: oklch(0.720 0.105 60);        /* warm ember — the last light in the blue hour */
+  --accent-strong: oklch(0.630 0.120 52);
+  --on-accent: oklch(0.199 0.007 258); /* dark charcoal label on the warm-ember fill (dark theme) */
   --line: oklch(0.90 0.02 256 / 0.13);
   --line-hi: oklch(0.90 0.02 256 / 0.24);
 
@@ -274,7 +274,7 @@ h1, h2, h3 { font-family: var(--font-heading); font-weight: 600; line-height: 1.
 :root {
   --film-strip: oklch(0.186 0.011 261);
   --film-hole: oklch(0.153 0.007 258);
-  --edge-print: oklch(0.717 0.048 254 / 0.85);
+  --edge-print: oklch(0.740 0.100 62 / 0.85);
   --font-edge: ui-monospace, "Cascadia Mono", Consolas, "Courier New", monospace;
 }
 
@@ -396,13 +396,13 @@ body.reel-focus .light-table { position: relative; z-index: 160; }
   box-shadow:
     0 0 0 5px oklch(0.14 0.01 258 / 0.45),
     inset 0 0 0 2px oklch(0.14 0.01 258 / 0.5),
-    inset 0 0 16px oklch(0.78 0.06 256 / 0.3);
+    inset 0 0 16px oklch(0.78 0.09 62 / 0.3);
   opacity: 0; transition: opacity 0.3s var(--ease-out);
   will-change: transform;
 }
 .loupe::before {
   content: ""; position: absolute; inset: -11px; border-radius: 50%;
-  border: 1.5px solid oklch(0.668 0.057 255 / 0.6);
+  border: 1.5px solid oklch(0.70 0.10 60 / 0.6);
 }
 .loupe::after {
   content: "";
@@ -413,8 +413,8 @@ body.reel-focus .light-table { position: relative; z-index: 160; }
   width: 14px;
   height: 14px;
   background: 
-    linear-gradient(90deg, transparent 6px, oklch(0.72 0.06 256 / 0.95) 6px, oklch(0.72 0.06 256 / 0.95) 8px, transparent 8px),
-    linear-gradient(0deg, transparent 6px, oklch(0.72 0.06 256 / 0.95) 6px, oklch(0.72 0.06 256 / 0.95) 8px, transparent 8px);
+    linear-gradient(90deg, transparent 6px, oklch(0.74 0.11 62 / 0.95) 6px, oklch(0.74 0.11 62 / 0.95) 8px, transparent 8px),
+    linear-gradient(0deg, transparent 6px, oklch(0.74 0.11 62 / 0.95) 6px, oklch(0.74 0.11 62 / 0.95) 8px, transparent 8px);
 }
 .loupe.is-on { opacity: 1; }
 .loupe.is-snap { animation: lensFlash 0.3s var(--ease-out); }
@@ -460,7 +460,7 @@ body.reel-focus .dim-overlay { opacity: 1; }
 .shot__title { font-family: var(--font-body); font-style: italic; font-size: 1.05rem; color: oklch(0.96 0.008 258); }
 .shot__cat {
   font-family: var(--font-display); font-size: 0.72rem; font-weight: 500;
-  letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.78 0.06 256); white-space: nowrap;
+  letter-spacing: 0.12em; text-transform: uppercase; color: oklch(0.80 0.10 66); white-space: nowrap;
 }
 .gallery__empty { text-align: center; color: var(--muted); padding: 3rem var(--pad); font-style: italic; }
 
@@ -570,7 +570,7 @@ body.reel-focus .dim-overlay { opacity: 1; }
 .lightbox__buy:hover { background: var(--accent-strong); transform: translateY(-1px); }
 .lightbox__buy:active { transform: translateY(0); }
 .lightbox__buy.is-in-cart {
-  color: oklch(0.75 0.06 256);
+  color: oklch(0.80 0.11 64);
   background: transparent;
   border-color: oklch(1 0 0 / 0.25);
 }
@@ -583,7 +583,7 @@ body.reel-focus .dim-overlay { opacity: 1; }
   font-family: var(--font-display);
   font-size: 0.9rem;
   font-weight: 500;
-  color: oklch(0.75 0.06 256);
+  color: oklch(0.80 0.11 64);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -592,7 +592,7 @@ body.reel-focus .dim-overlay { opacity: 1; }
 }
 .lightbox__status {
   flex-basis: 100%; text-align: center; font-family: var(--font-display);
-  font-size: 0.9rem; color: oklch(0.75 0.06 256); min-height: 1.2em;
+  font-size: 0.9rem; color: oklch(0.80 0.11 64); min-height: 1.2em;
 }
 .lightbox__status:empty { display: none; }
 
@@ -706,17 +706,17 @@ body.reel-focus .dim-overlay { opacity: 1; }
 [data-theme="light"] .theme-toggle__sun { display: block; }
 
 [data-theme="light"] {
-  /* Blue hour, light: cool pale bone / porcelain, deeper slate-blue accent.
-     Cool and quiet so warm-toned photographs pop against it. */
+  /* Blue hour, light: cool pale bone / porcelain surfaces with a deep warm
+     terracotta accent. Cool and quiet base, warm human focus. */
   --bg: oklch(0.940 0.006 264);
   --bg-deep: oklch(0.908 0.009 258);
   --surface: oklch(0.976 0.003 264);
   --surface-hi: oklch(0.994 0.002 286);
   --ink: oklch(0.271 0.025 258);
   --muted: oklch(0.487 0.032 262);
-  --accent: oklch(0.482 0.059 254);
-  --accent-strong: oklch(0.425 0.059 254);
-  --on-accent: oklch(0.976 0.003 264); /* light label on the deeper light-mode slate */
+  --accent: oklch(0.470 0.120 50);        /* deep warm terracotta on cool bone */
+  --accent-strong: oklch(0.410 0.120 46);
+  --on-accent: oklch(0.976 0.003 264); /* light label on the deep terracotta fill */
   --line: oklch(0.30 0.03 258 / 0.16);
   --line-hi: oklch(0.30 0.03 258 / 0.30);
   /* --edge-print stays at its dark-theme value: edge codes always sit on the
@@ -740,7 +740,7 @@ body.reel-focus .dim-overlay { opacity: 1; }
 [data-theme="light"] .hero__title,
 [data-theme="light"] .hero__tagline,
 [data-theme="light"] .hero__cue { color: oklch(0.96 0.008 258); }
-[data-theme="light"] .hero__eyebrow { color: oklch(0.80 0.07 256); }
+[data-theme="light"] .hero__eyebrow { color: oklch(0.72 0.11 58); }
 
 /* Nav over the hero photo (index only, before scroll) needs light text */
 [data-theme="light"] body.has-hero .nav:not(.is-scrolled) .nav__mark,
