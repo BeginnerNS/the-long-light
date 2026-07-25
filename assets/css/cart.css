@@ -186,7 +186,7 @@
   flex-shrink: 0; align-self: flex-start;
   font-family: var(--font-edge); font-size: 0.58rem; letter-spacing: 0.1em;
   text-transform: uppercase; font-weight: 500;
-  background: var(--accent); color: var(--bg-deep);
+  background: var(--accent); color: var(--on-accent);
   padding: 0.3rem 0.55rem; border-radius: var(--radius);
 }
 .cart-deal__text {
