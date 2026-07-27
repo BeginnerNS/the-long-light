@@ -158,7 +158,6 @@
     var clearBtn = document.getElementById("cart-clear");
     var navCount = document.getElementById("nav-cart-count");
     var navPill = document.getElementById("nav-cart-pill");
-    var saveEl = document.getElementById("cart-save");
     var invoiceEl = document.getElementById("cart-invoice");
     var moreEl = document.getElementById("cart-more");
 
@@ -172,9 +171,7 @@
     function renderCart() {
       var items = TLLCart.get();
       var count = items.length;
-      var subtotal = count * PRICE;
       var total = bundleTotal(count);
-      var saved = subtotal - total;
 
       /* Nav pill */
       if (navCount) navCount.textContent = count;
@@ -194,17 +191,6 @@
       countEl.textContent = count + (count === 1 ? " photo" : " photos");
       totalEl.textContent = "₹" + total;
       totalNumEl.textContent = total;
-      if (saveEl) {
-        saveEl.hidden = false;
-        if (saved > 0) {
-          saveEl.className = "cart-summary__save is-unlocked";
-          saveEl.textContent = "★ Bundle unlocked — you saved ₹" + saved;
-        } else {
-          var need = 3 - count;
-          saveEl.className = "cart-summary__save";
-          saveEl.textContent = "Add " + need + " more frame" + (need > 1 ? "s" : "") + " to save ₹7";
-        }
-      }
 
       grid.innerHTML = "";
       items.forEach(function (item, i) {
@@ -251,7 +237,6 @@
 
     /* jsPDF is loaded lazily — only after a verified payment — so the cart
        page itself stays light. */
-    var jspdfLoading = false;
     function ensureJsPDF(cb) {
       if (window.jspdf && window.jspdf.jsPDF) { cb(); return; }
       var s = document.createElement("script");

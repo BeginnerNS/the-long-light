@@ -170,8 +170,15 @@ module.exports = async (req, res) => {
     } catch (e) { continue; }
   }
 
-  if (files.length === 0) {
-    return res.status(404).json({ error: "None of the requested photos could be prepared" });
+  /* Never silently short-change a paid order: if any requested photo could
+     not be decrypted/fetched, fail loudly instead of streaming a ZIP that's
+     missing files the buyer paid for. */
+  if (files.length !== requestedItems.length) {
+    return res.status(502).json({
+      error: "Some of your photos could not be prepared. Please email nisargi3112@gmail.com with payment id " + paymentId + " and we'll send them right away.",
+      prepared: files.length,
+      ordered: requestedItems.length
+    });
   }
 
   const zip = buildZip(files);
