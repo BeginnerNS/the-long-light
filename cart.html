@@ -8,6 +8,7 @@
   <meta name="robots" content="noindex">
 
   <link rel="canonical" href="https://the-long-light-xi.vercel.app/cart">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <script>document.documentElement.classList.remove('no-js');document.documentElement.classList.add('js');</script>
   <script>(function(){try{var t=localStorage.getItem('tll_theme');if(t!=='light'&&t!=='dark')t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 
@@ -22,7 +23,16 @@
 
   <header class="nav" id="nav">
     <div class="nav__inner">
-      <a class="nav__mark" href="index.html">The Long Light</a>
+      <a class="nav__mark" href="index.html">
+        <svg class="nav__mark-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <circle class="nav__mark-sun" cx="16" cy="18" r="6"/>
+          <g stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+            <path d="M4 24h24"/>
+            <path d="M16 3v3.4M6.8 7.4l2.2 2.2M25.2 7.4l-2.2 2.2M3.4 16H6.5M25.5 16H28.6"/>
+          </g>
+        </svg>
+        <span>The Long Light</span>
+      </a>
       <nav class="nav__links" aria-label="Primary">
         <div class="nav__menu" id="nav-menu">
           <a href="index.html#work">Work</a>

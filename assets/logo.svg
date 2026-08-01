@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="The Long Light">
+  <circle cx="16" cy="18" r="6" fill="#d5945e"/>
+  <g stroke="#efe7db" stroke-width="1.9" stroke-linecap="round" fill="none">
+    <path d="M4 24h24"/>
+    <path d="M16 3v3.4M6.8 7.4l2.2 2.2M25.2 7.4l-2.2 2.2M3.4 16H6.5M25.5 16H28.6"/>
+  </g>
+</svg>
